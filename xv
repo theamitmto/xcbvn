@@ -1,0 +1,3470 @@
+<!DOCTYPE html>
+<html lang="hi" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0284c7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Smart Study Pro - Ultimate Aspirant OS & Syllabus Tracker</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <!-- QRCode.js CDN for sharing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: ['class', '#super-tracker-root.dark'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans Devanagari', 'sans-serif'],
+            display: ['"Plus Jakarta Sans"', 'Noto Sans Devanagari', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    #super-tracker-root {
+      /* DEFAULT TO LUXURIOUS LIGHT MODE */
+      --st-bg: #f8fafc;
+      --st-card: rgba(255, 255, 255, 0.96);
+      --st-card-solid: #ffffff;
+      --st-card-subtle: #f1f5f9;
+      --st-border: #e2e8f0;
+      --st-border-focus: #0284c7;
+      --st-text-head: #0f172a;
+      --st-text-body: #334155;
+      --st-text-muted: #64748b;
+      --st-primary: #0284c7;
+      --st-primary-glow: rgba(2, 132, 199, 0.22);
+      --st-accent: #059669;
+      --st-checkbox-bg: #f8fafc;
+      --st-checkbox-border: #cbd5e1;
+      --st-sticky-col: #ffffff;
+      font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+      color: var(--st-text-body);
+      background-color: var(--st-bg);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
+    }
+
+    #super-tracker-root.dark {
+      --st-bg: #090d16;
+      --st-card: rgba(16, 22, 38, 0.94);
+      --st-card-solid: #101626;
+      --st-card-subtle: #172033;
+      --st-border: #1e293b;
+      --st-border-focus: #38bdf8;
+      --st-text-head: #f8fafc;
+      --st-text-body: #cbd5e1;
+      --st-text-muted: #64748b;
+      --st-primary: #38bdf8;
+      --st-primary-glow: rgba(56, 189, 248, 0.25);
+      --st-accent: #10b981;
+      --st-checkbox-bg: #141c2e;
+      --st-checkbox-border: #28374d;
+      --st-sticky-col: #101626;
+    }
+
+    #super-tracker-root .st-glass {
+      background-color: var(--st-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--st-border);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    }
+    #super-tracker-root.dark .st-glass {
+      box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.55);
+    }
+
+    #super-tracker-root .st-subtle {
+      background-color: var(--st-card-subtle);
+      border: 1px solid var(--st-border);
+    }
+
+    #super-tracker-root .st-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      background: var(--st-checkbox-bg);
+      border: 2px solid var(--st-checkbox-border);
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      outline: none;
+      position: relative;
+    }
+    #super-tracker-root .st-checkbox:checked {
+      background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      border-color: #38bdf8;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.55);
+      animation: stCheckPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #super-tracker-root .st-checkbox:checked::after {
+      content: '✓';
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    @keyframes stCheckPop {
+      0% { transform: scale(0.75); }
+      50% { transform: scale(1.22); }
+      100% { transform: scale(1); }
+    }
+    @keyframes stFadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes stFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(2deg); }
+    }
+    @keyframes stFlamePulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.5)); }
+      50% { transform: scale(1.15); filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.7)); }
+    }
+    @keyframes stSoundBarBounce {
+      0%, 100% { height: 6px; }
+      50% { height: 22px; }
+    }
+    @keyframes stRotateRing {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .st-sound-bar {
+      width: 3.5px;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #38bdf8 0%, #2563eb 100%);
+      animation: stSoundBarBounce 1.1s ease-in-out infinite;
+    }
+    .st-sound-bar:nth-child(2) { animation-delay: 0.15s; }
+    .st-sound-bar:nth-child(3) { animation-delay: 0.3s; }
+    .st-sound-bar:nth-child(4) { animation-delay: 0.45s; }
+
+    .st-animate-fade {
+      animation: stFadeInUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .st-float-icon {
+      display: inline-block;
+      animation: stFloat 3.2s ease-in-out infinite;
+    }
+    .st-flame-icon {
+      display: inline-block;
+      animation: stFlamePulse 1.8s ease-in-out infinite;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printReportSection, #printReportSection * { visibility: visible; }
+      #printReportSection {
+        position: absolute; left: 0; top: 0; width: 100%;
+        background: #ffffff !important; color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="m-0 p-0 bg-slate-900">
+
+  <!-- ROOT MOBILE CONTAINER -->
+  <div id="super-tracker-root" class="w-full min-h-screen transition-colors duration-200">
+    
+    <!-- TOP STICKY MOBILE APP BAR -->
+    <header class="sticky top-0 z-40 bg-[var(--st-card)]/90 backdrop-blur-md border-b border-[var(--st-border)] px-3.5 py-2.5 shadow-sm">
+      <div class="flex items-center justify-between gap-2 max-w-md mx-auto">
+        
+        <!-- Identity Branding & Student Name -->
+        <div class="flex items-center gap-2 truncate">
+          <div class="w-9 h-9 min-w-[36px] rounded-xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/25 text-lg font-black st-float-icon">
+            🎯
+          </div>
+          <div class="truncate">
+            <h1 class="text-sm font-display font-black tracking-tight text-[var(--st-text-head)] leading-none">
+              Smart Study <span class="text-sky-500">Pro</span>
+            </h1>
+            <div class="flex items-center gap-1.5 mt-1">
+              <button onclick="openExamSetupModal()" class="text-[10px] font-bold text-sky-600 dark:text-sky-400 flex items-center gap-0.5 truncate max-w-[120px]">
+                <span id="displayHeaderStudentName">Aspirant</span> ✏️
+              </button>
+              <span id="badgeRank" class="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 truncate">
+                Novice
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Top Action Buttons -->
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <button onclick="openSubjectModal()" class="w-8 h-8 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-black text-base flex items-center justify-center shadow-md active:scale-95" title="नया विषय जोड़ें">
+            +
+          </button>
+          <button onclick="openManageDrawer()" class="w-8 h-8 rounded-xl st-subtle text-xs flex items-center justify-center text-[var(--st-text-head)] active:scale-95" title="मैनेज">
+            ⚙️
+          </button>
+          <button onclick="toggleAppLanguage()" class="px-2 h-8 rounded-xl st-subtle text-[11px] font-bold text-sky-500 flex items-center justify-center active:scale-95">
+            <span id="mobileLangLabel">EN</span>
+          </button>
+          <button onclick="toggleAppTheme()" class="w-8 h-8 rounded-xl st-subtle text-xs flex items-center justify-center text-[var(--st-text-head)] active:scale-95" title="थीम">
+            <span id="mobileThemeIcon">🌙</span>
+          </button>
+          <button onclick="toggleSoundFx()" id="btnMobileSound" class="w-8 h-8 rounded-xl st-subtle text-xs flex items-center justify-center active:scale-95" title="ध्वनि">
+            🔊
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Compact Exam Countdown Banner -->
+      <div class="mt-2 flex items-center justify-between px-3 py-1.5 rounded-xl st-subtle border border-indigo-500/25 bg-indigo-500/5 text-[11px] max-w-md mx-auto">
+        <div class="flex items-center gap-1.5 truncate">
+          <span>⏳</span>
+          <span class="font-extrabold text-sky-600 dark:text-sky-400 truncate max-w-[140px]" id="displayTargetExamName">Target Exam</span>
+          <button onclick="openExamSetupModal()" class="text-[9px] text-[var(--st-text-muted)] hover:text-sky-500">✏️</button>
+        </div>
+        <div class="font-mono font-black text-indigo-600 dark:text-indigo-300 text-xs flex items-center gap-1 flex-shrink-0" id="countdownDisplay">
+          <span id="cdDays">00</span>d : <span id="cdHours">00</span>h : <span id="cdMins">00</span>m
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN SCROLLABLE MOBILE CONTENT CONTAINER -->
+    <main class="p-3.5 space-y-4 max-w-md mx-auto">
+
+      <!-- ================= TAB 1: DAILY MATRIX VIEW ================= -->
+      <section id="tabContentMatrix" class="space-y-4">
+
+        <!-- Mobile Horizontal KPI Cards Slider -->
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
+          <!-- Card 1: Hours -->
+          <div class="min-w-[130px] flex-1 st-glass p-3 rounded-2xl flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span id="card1Title" class="text-[10px] font-bold uppercase text-[var(--st-text-muted)]">कुल समय</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-500 font-mono font-black">HRS</span>
+            </div>
+            <div class="mt-1">
+              <span id="metricTotalHours" class="text-xl font-display font-black text-sky-600 dark:text-sky-400">0.0h</span>
+              <span class="text-[10px] text-[var(--st-text-muted)] font-mono block" id="metricHoursTarget">/ 0h goal</span>
+            </div>
+            <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+              <div id="barOverallPct" class="h-full bg-sky-500 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Card 2: Today's Target -->
+          <div class="min-w-[130px] flex-1 st-glass p-3 rounded-2xl flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span id="card2Title" class="text-[10px] font-bold uppercase text-[var(--st-text-muted)]">आज का अध्ययन</span>
+              <span class="text-[9px] font-mono font-bold text-[var(--st-text-muted)]">D<span id="metricActiveDayNum">1</span></span>
+            </div>
+            <div class="mt-1">
+              <span id="metricTodayHours" class="text-xl font-display font-black text-emerald-600 dark:text-emerald-400">0.0h</span>
+              <span class="text-[10px] text-emerald-500 font-bold block mt-0.5" id="metricTodayRatio">0/0 Topics</span>
+            </div>
+            <p id="card2Note" class="text-[9px] text-[var(--st-text-muted)] mt-1 truncate">दैनिक लक्ष्य अनुसार</p>
+          </div>
+
+          <!-- Card 3: Streak -->
+          <div class="min-w-[130px] flex-1 st-glass p-3 rounded-2xl flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span id="card3Title" class="text-[10px] font-bold uppercase text-[var(--st-text-muted)]">कंसिस्टेंसी</span>
+              <div class="flex items-center gap-1">
+                <button onclick="useStreakFreezeShield()" id="btnStreakFreeze" class="text-[9px] px-1 py-0.5 rounded bg-sky-500/10 text-sky-500 font-bold">
+                  🛡️ <span id="shieldCount">2</span>
+                </button>
+                <span class="text-sm st-flame-icon">🔥</span>
+              </div>
+            </div>
+            <div class="mt-1">
+              <span id="metricStreakDays" class="text-xl font-display font-black text-amber-500">0 दिन</span>
+            </div>
+            <p id="card3Note" class="text-[9px] text-[var(--st-text-muted)] mt-1 truncate">बिना ब्रेक निरंतर</p>
+          </div>
+        </div>
+
+        <!-- Telemetry Strip -->
+        <div class="st-glass px-3.5 py-2 rounded-2xl flex items-center justify-between text-[11px] font-mono">
+          <div class="flex items-center gap-1.5 truncate">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping flex-shrink-0"></span>
+            <span class="font-bold text-[var(--st-text-head)] truncate" id="telemetryForecast">गति विश्लेषण...</span>
+          </div>
+          <span class="text-sky-500 font-bold flex-shrink-0" id="telemetryPace">0.0h/day</span>
+        </div>
+
+        <!-- Mindset, Sleep & PYQ Speed Bar -->
+        <div class="st-glass p-3.5 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase text-[var(--st-text-muted)] flex items-center gap-1.5">
+              <span>🧠</span> माइंडसेट
+            </span>
+            <div class="flex items-center gap-1">
+              <button onclick="setDailyEnergy('high')" id="btnEnergyHigh" class="px-2 py-1 rounded-lg text-[10px] font-bold st-subtle">⚡ फोकस</button>
+              <button onclick="setDailyEnergy('med')" id="btnEnergyMed" class="px-2 py-1 rounded-lg text-[10px] font-bold st-subtle">🔋 सामान्य</button>
+              <button onclick="setDailyEnergy('low')" id="btnEnergyLow" class="px-2 py-1 rounded-lg text-[10px] font-bold st-subtle">🪫 थकान</button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-[var(--st-border)] text-xs">
+            <!-- Sleep Selector -->
+            <div class="flex items-center gap-1.5">
+              <span class="text-[11px] font-bold text-[var(--st-text-muted)]">😴 नींद:</span>
+              <select id="selectSleepHours" onchange="setDailySleep(this.value)" class="px-2 py-1 rounded-lg st-subtle text-[11px] font-mono font-bold outline-none text-sky-500">
+                <option value="5">5h</option>
+                <option value="6">6h</option>
+                <option value="7" selected>7h</option>
+                <option value="8">8h</option>
+                <option value="9">9h+</option>
+              </select>
+            </div>
+
+            <!-- Notes Button -->
+            <button onclick="openDailyNotesModal()" class="px-2.5 py-1 rounded-xl bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 font-bold text-[11px] flex items-center gap-1">
+              <span>📓</span> <span>दैनिक नोट्स</span>
+            </button>
+          </div>
+
+          <!-- PYQ Accuracy Meter -->
+          <div class="pt-2 border-t border-[var(--st-border)] flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs">🎯</span>
+              <span class="text-xs font-bold text-[var(--st-text-muted)]">PYQ अभ्यास:</span>
+              <span id="displayPyqAccuracy" class="text-[10px] font-mono font-black text-emerald-500 px-1.5 py-0.2 rounded bg-emerald-500/10">0% Acc</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="adjustDetailedPyq('correct', -5)" class="w-6 h-6 rounded st-subtle font-black text-xs">-</button>
+              <span id="valPyqCorrect" class="font-mono font-black text-xs text-emerald-500 min-w-[16px] text-center">0</span>
+              <button onclick="adjustDetailedPyq('correct', 5)" class="w-6 h-6 rounded bg-emerald-500/10 text-emerald-500 font-black text-xs">+</button>
+              <span class="text-[10px] font-bold text-[var(--st-text-muted)] ml-1">कुल: <b id="displayTodayPyq" class="text-[var(--st-text-head)]">0</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1-7-30 Spaced Repetition Due Alert Strip -->
+        <div id="spacedRepetitionSuperAlert" class="hidden st-glass p-3.5 rounded-2xl border-2 border-rose-500/50 bg-gradient-to-r from-rose-500/10 via-amber-500/5 to-sky-500/10 space-y-2 st-animate-fade">
+          <div class="flex items-center justify-between pb-1.5 border-b border-[var(--st-border)]">
+            <div class="flex items-center gap-1.5">
+              <span class="text-base st-flame-icon">🚨</span>
+              <h3 class="text-xs font-black text-rose-600 dark:text-rose-400">1-7-30 रिवीजन अलर्ट</h3>
+            </div>
+            <span id="badgeRevisionDueCount" class="text-[10px] font-black px-2 py-0.5 rounded-full bg-rose-500 text-white animate-pulse">0 Due</span>
+          </div>
+          <div id="spacedRepetitionCardsList" class="space-y-2"></div>
+        </div>
+
+        <!-- Revision Queue Banner -->
+        <div id="wrapperRevisionQueue" class="hidden st-glass p-3 rounded-2xl border border-amber-500/30 bg-amber-500/5 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold text-[11px]">
+            <span>🔄</span> <span>आज रिवीजन देय है:</span>
+          </div>
+          <div id="revisionQueueBadges" class="flex flex-wrap items-center gap-1.5"></div>
+        </div>
+
+        <!-- Today Checklist Section -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between px-1">
+            <h3 class="text-xs font-black uppercase tracking-wider text-[var(--st-text-muted)] flex items-center gap-1.5">
+              <span>📋</span> <span id="mobileSliderTitle">आज का दिन (Locked to Live Date)</span>
+            </h3>
+            <span class="text-[10px] font-mono font-bold text-sky-500" id="liveDateString">Loading date...</span>
+          </div>
+
+          <!-- Date Carousel Slider -->
+          <div id="mobileDaysContainer" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+
+          <!-- Mobile Subject Cards Container -->
+          <div id="mobileCardsContainer" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Hidden desktop table elements maintained to preserve JS queries -->
+        <div class="hidden">
+          <span id="displayLiveClockDisplay"></span>
+          <span id="liveClockDisplay"></span>
+          <span id="liveDateDisplay"></span>
+          <span id="badgeARI"></span>
+          <span id="badgeEfficiency"></span>
+          <span id="lblManifestoPost"></span>
+          <span id="metricTopSubject"></span>
+          <span id="metricTopSubjectScore"></span>
+          <span id="metricWeakSubject"></span>
+          <span id="card5Note"></span>
+          <span id="valPyqWrong"></span>
+          <span id="telemetryBurnout"></span>
+          <span id="telemetryCutoffProb"></span>
+          <span id="btnDailyNotesText"></span>
+          <span id="mobileActiveDateBadge"></span>
+          <span id="desktopTableTitle"></span>
+          <span id="desktopTableSubtitle"></span>
+          <span id="desktopLangLabel"></span>
+          <span id="desktopThemeIcon"></span>
+          <span id="desktopThemeLabel"></span>
+          <span id="labelBtnAdd"></span>
+          <span id="labelBtnManage"></span>
+          <span id="appSubtitle"></span>
+          <span id="card4Title"></span>
+          <span id="card5Title"></span>
+          <span id="tabLabelMatrix"></span>
+          <span id="tabLabelFocus"></span>
+          <span id="tabLabelMocks"></span>
+          <span id="tabLabelWarroom"></span>
+          <span id="tabLabelAnalytics"></span>
+          <button id="btnDesktopSound"></button>
+          <table>
+            <thead id="desktopThead"></thead>
+            <tbody id="desktopTbody"></tbody>
+            <tfoot id="desktopTfoot"></tfoot>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 2: SPACED HUB VIEW ================= -->
+      <section id="tabContentSpacedhub" class="hidden space-y-4">
+        <div class="st-glass p-4 rounded-2xl space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🔁</span>
+            <div>
+              <h2 class="text-sm font-black text-[var(--st-text-head)]">1-7-30 वैज्ञानिक रिवीजन कमांड हब</h2>
+              <p class="text-[11px] text-[var(--st-text-muted)]">एबिंगहॉस फॉरगेटिंग कर्व को वैज्ञानिक रूप से हराएं</p>
+            </div>
+          </div>
+
+          <!-- KPI Counters -->
+          <div class="grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-2.5 rounded-xl st-subtle border border-rose-500/30">
+              <span class="text-[10px] uppercase font-bold text-rose-500 block">आज देय (Due)</span>
+              <span id="kpiSpacedDueToday" class="text-xl font-black font-mono text-rose-500">0</span>
+            </div>
+            <div class="p-2.5 rounded-xl st-subtle border border-amber-500/30">
+              <span class="text-[10px] uppercase font-bold text-amber-500 block">आगामी 7 दिन</span>
+              <span id="kpiSpacedUpcoming" class="text-xl font-black font-mono text-amber-500">0</span>
+            </div>
+            <div class="p-2.5 rounded-xl st-subtle border border-emerald-500/30">
+              <span class="text-[10px] uppercase font-bold text-emerald-500 block">पूर्ण रिवीजन</span>
+              <span id="kpiSpacedCompleted" class="text-xl font-black font-mono text-emerald-500">0</span>
+            </div>
+            <div class="p-2.5 rounded-xl st-subtle border border-sky-500/30">
+              <span class="text-[10px] uppercase font-bold text-sky-500 block">कुल लॉग्स</span>
+              <span id="kpiSpacedTotalLogs" class="text-xl font-black font-mono text-sky-500">0</span>
+            </div>
+          </div>
+
+          <!-- Subject Filter -->
+          <div>
+            <select id="selectSpacedFilterSubject" onchange="renderSpacedHubTable()" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-bold outline-none text-[var(--st-text-head)]">
+              <option value="all">🌐 सभी विषय (All Subjects)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mobile Card-based 1-7-30 Ledger List -->
+        <div class="space-y-2.5" id="mobileSpacedCardsList"></div>
+
+        <!-- Hidden table to preserve renderSpacedHubTable DOM references -->
+        <table class="hidden"><tbody id="spacedHubTableBody"></tbody></table>
+      </section>
+
+      <!-- ================= TAB 3: FOCUS DESK (POMODORO) ================= -->
+      <section id="tabContentFocus" class="hidden space-y-4">
+        <div class="st-glass p-5 rounded-3xl text-center space-y-4 relative overflow-hidden" id="focusConsoleWrapper">
+          
+          <!-- Micro Target Input with Quick Tag Pills -->
+          <div class="p-2 rounded-2xl st-subtle border border-[var(--st-border)] space-y-2 text-left">
+            <div class="flex items-center gap-2 px-1">
+              <span class="text-sm">🎯</span>
+              <input type="text" id="inputFocusGoal" placeholder="इस सत्र का लक्ष्य (उदा. प्रॉफिट एंड लॉस 10 सवाल)..." class="w-full bg-transparent text-xs font-bold text-[var(--st-text-head)] outline-none">
+            </div>
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1.5 border-t border-[var(--st-border)] text-[10px] font-bold">
+              <button type="button" onclick="setQuickFocusTag('📖 थ्योरी रीडिंग')" class="px-2 py-0.5 rounded-lg st-glass hover:text-sky-500 flex-shrink-0">📖 थ्योरी</button>
+              <button type="button" onclick="setQuickFocusTag('✍️ PYQ अभ्यास')" class="px-2 py-0.5 rounded-lg st-glass hover:text-sky-500 flex-shrink-0">✍️ PYQs</button>
+              <button type="button" onclick="setQuickFocusTag('🔁 शॉर्ट नोट्स रिवीजन')" class="px-2 py-0.5 rounded-lg st-glass hover:text-sky-500 flex-shrink-0">🔁 रिवीजन</button>
+            </div>
+          </div>
+
+          <!-- Presets Slider -->
+          <div class="flex items-center justify-between gap-1 p-1 rounded-2xl st-subtle text-[11px] font-bold overflow-x-auto no-scrollbar">
+            <button onclick="setTimerPreset(25, 'pomodoro')" id="btnPomoMode" class="flex-1 py-1.5 rounded-xl bg-sky-500 text-white font-black whitespace-nowrap px-2">25m</button>
+            <button onclick="setTimerPreset(50, 'ultradian')" id="btnUltradianMode" class="flex-1 py-1.5 rounded-xl text-[var(--st-text-muted)] whitespace-nowrap px-2">50m</button>
+            <button onclick="setTimerPreset(90, 'marathon')" id="btnMarathonMode" class="flex-1 py-1.5 rounded-xl text-[var(--st-text-muted)] whitespace-nowrap px-2">90m</button>
+            <button onclick="setTimerPreset(5, 'short')" id="btnShortMode" class="flex-1 py-1.5 rounded-xl text-[var(--st-text-muted)] whitespace-nowrap px-2">5m</button>
+            <button onclick="setTimerPreset(15, 'long')" id="btnLongMode" class="flex-1 py-1.5 rounded-xl text-[var(--st-text-muted)] whitespace-nowrap px-2">15m</button>
+            <button onclick="setStopwatchMode()" id="btnStopwatchMode" class="flex-1 py-1.5 rounded-xl text-[var(--st-text-muted)] whitespace-nowrap px-2">⏱️ SW</button>
+          </div>
+
+          <!-- Custom Minutes & Seconds Controls -->
+          <div class="p-2 rounded-xl st-subtle flex items-center justify-center gap-1.5 text-xs font-mono">
+            <input type="number" id="inputCustomMinutes" min="0" max="180" value="25" class="w-14 px-2 py-1 rounded-lg st-glass text-center font-black outline-none border border-[var(--st-border)]">
+            <span class="font-bold text-[var(--st-text-muted)]">m :</span>
+            <input type="number" id="inputCustomSeconds" min="0" max="59" value="0" class="w-14 px-2 py-1 rounded-lg st-glass text-center font-black outline-none border border-[var(--st-border)]">
+            <span class="font-bold text-[var(--st-text-muted)]">s</span>
+            <button onclick="applyCustomHmsInput()" class="px-2.5 py-1 rounded-lg bg-sky-500 text-white text-[10px] font-black">लागू करें</button>
+          </div>
+
+          <!-- Circular Digital Timer Core -->
+          <div class="relative w-64 h-64 mx-auto flex items-center justify-center my-1">
+            <div class="absolute inset-2 rounded-full border-2 border-dashed border-sky-500/20 pointer-events-none" style="animation: stRotateRing 60s linear infinite;"></div>
+            <svg class="w-full h-full transform -rotate-90">
+              <circle cx="50%" cy="50%" r="42%" stroke="currentColor" stroke-width="7" class="text-slate-200 dark:text-slate-800" fill="transparent"/>
+              <circle id="timerProgressGlow" cx="50%" cy="50%" r="42%" stroke="rgba(56, 189, 248, 0.35)" stroke-width="12" stroke-linecap="round" fill="transparent" stroke-dasharray="720" stroke-dashoffset="0" class="transition-all duration-300 blur-[2px]"/>
+              <circle id="timerProgressCircle" cx="50%" cy="50%" r="42%" stroke="#0284c7" stroke-width="7" stroke-linecap="round" fill="transparent" stroke-dasharray="720" stroke-dashoffset="0" class="transition-all duration-300"/>
+            </svg>
+
+            <div class="absolute flex flex-col items-center select-none">
+              <div class="flex items-baseline justify-center font-mono font-black text-[var(--st-text-head)]">
+                <span id="timerMinsDisplay" class="text-4xl">25</span>
+                <span class="text-3xl text-sky-500 mx-0.5">:</span>
+                <span id="timerSecsDisplay" class="text-4xl">00</span>
+                <span class="text-2xl text-sky-500/70 ml-0.5">:</span>
+                <span id="timerMsDisplay" class="text-2xl text-sky-600 dark:text-sky-400">00</span>
+              </div>
+              <div class="flex items-center gap-1.5 mt-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500" id="timerStatusDot"></span>
+                <span id="timerSubjectTag" class="text-[10px] font-bold text-sky-600 dark:text-sky-400 px-2 py-0.5 rounded-full bg-sky-500/10 truncate max-w-[150px]">
+                  गहन अध्ययन सत्र
+                </span>
+              </div>
+              <span id="sessionEndTimeDisplay" class="text-[10px] font-mono text-[var(--st-text-muted)] mt-1">Finishes at --:--</span>
+              <span id="sessionProgressPct" class="text-[9px] font-mono text-[var(--st-text-muted)]">Progress: 0%</span>
+            </div>
+          </div>
+
+          <!-- Timer Controls -->
+          <div class="flex items-center justify-center gap-2.5">
+            <button onclick="toggleTimerPlay()" id="btnTimerStart" class="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-black text-sm shadow-lg shadow-sky-500/30 flex items-center justify-center gap-2 active:scale-95 transition-all">
+              <span id="timerPlayIcon">▶</span> <span id="timerPlayText">सत्र शुरू करें</span>
+            </button>
+            <button onclick="resetTimer()" class="w-12 h-12 rounded-2xl st-subtle text-base flex items-center justify-center active:scale-95">
+              ↺
+            </button>
+            <button onclick="toggleZenFocusMode()" class="w-12 h-12 rounded-2xl st-subtle text-base flex items-center justify-center active:scale-95 text-indigo-500" id="btnZenDeskToggle">
+              🧘
+            </button>
+          </div>
+
+          <!-- Today Focus Stats Battery -->
+          <div class="grid grid-cols-2 gap-2 text-center text-xs pt-2">
+            <div class="p-2.5 rounded-2xl st-subtle">
+              <span class="text-[9px] uppercase font-bold text-[var(--st-text-muted)] block">पूर्ण पोमोडोरो</span>
+              <span id="metricCompletedPomos" class="text-xl font-black font-mono text-sky-500 mt-0.5 block">0</span>
+            </div>
+            <div class="p-2.5 rounded-2xl st-subtle">
+              <span class="text-[9px] uppercase font-bold text-[var(--st-text-muted)] block">डीप फोकस समय</span>
+              <span id="metricFocusDeskTime" class="text-xl font-black font-mono text-emerald-500 mt-0.5 block">0m</span>
+            </div>
+          </div>
+
+          <!-- Log session time to subject -->
+          <div class="pt-2 border-t border-[var(--st-border)] flex items-center gap-2 text-left">
+            <select id="selectFocusSubjectLog" class="w-full px-3 py-2 rounded-xl st-subtle text-xs outline-none font-bold text-[var(--st-text-head)]"></select>
+            <button onclick="logSessionTimeToSubject()" class="px-3.5 py-2 rounded-xl text-xs font-black bg-emerald-600 text-white flex-shrink-0">लॉग +</button>
+          </div>
+
+          <!-- Neuro-Ambient Noise Strip -->
+          <div class="pt-2 border-t border-[var(--st-border)] flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[11px] font-bold text-[var(--st-text-muted)]">🎧 साउंड:</span>
+              <div class="flex items-center gap-0.5 h-3 px-1 rounded st-subtle">
+                <span class="st-sound-bar"></span><span class="st-sound-bar"></span><span class="st-sound-bar"></span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 overflow-x-auto no-scrollbar">
+              <button onclick="toggleAmbientSound('rain')" id="ambBtnRain" class="px-2 py-1 rounded-lg st-subtle text-[10px] font-bold">🌧️ बारिश</button>
+              <button onclick="toggleAmbientSound('brownnoise')" id="ambBtnBrown" class="px-2 py-1 rounded-lg st-subtle text-[10px] font-bold">🌊 ब्राउन</button>
+              <button onclick="toggleAmbientSound('whitenoise')" id="ambBtnWhite" class="px-2 py-1 rounded-lg st-subtle text-[10px] font-bold">📻 व्हाइट</button>
+              <button onclick="toggleAmbientSound('binaural')" id="ambBtnBinaural" class="px-2 py-1 rounded-lg st-subtle text-[10px] font-bold">🧠 40Hz</button>
+              <button onclick="toggleAmbientSound('alpha')" id="ambBtnAlpha" class="px-2 py-1 rounded-lg st-subtle text-[10px] font-bold">✨ 10Hz</button>
+            </div>
+          </div>
+
+          <div class="hidden">
+            <span id="focusEfficiencyBadge"></span>
+            <span id="deepWorkGoalPercent"></span>
+            <div id="deepWorkProgressBar"></div>
+            <div id="pomodoroOrbsContainer"></div>
+            <input type="range" id="ambientVolumeSlider" value="0.2">
+            <div id="distractionChecksList">
+              <input type="checkbox" id="distract0">
+              <input type="checkbox" id="distract1">
+              <input type="checkbox" id="distract2">
+              <input type="checkbox" id="distract3">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: MOCK TEST & PYQ LOG ================= -->
+      <section id="tabContentMocks" class="hidden space-y-4">
+        <div class="st-glass p-4 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-black text-[var(--st-text-head)] flex items-center gap-1.5">
+              <span>📝</span> नया मॉक टेस्ट दर्ज करें
+            </h3>
+            <span class="text-xs font-mono font-bold text-sky-500" id="totalMocksCountBadge">0 Tests</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <input type="text" id="inputMockTitle" placeholder="मॉक टेस्ट का नाम (उदा. Full Mock 05)" class="w-full px-3 py-2 rounded-xl st-subtle text-xs outline-none">
+            
+            <div class="grid grid-cols-2 gap-2">
+              <input type="number" id="inputMockScore" placeholder="प्राप्तांक (Marks)" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-mono font-bold">
+              <input type="number" id="inputMockTotal" placeholder="कुल अंक" value="200" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-mono font-bold">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <input type="number" id="inputMockAccuracy" placeholder="Accuracy %" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-mono font-bold">
+              <input type="number" id="inputMockPercentile" placeholder="Percentile %ile" step="0.1" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-mono font-bold">
+            </div>
+
+            <div class="pt-1.5 border-t border-[var(--st-border)]">
+              <span class="text-[10px] uppercase font-bold text-rose-500 block mb-1">गलत प्रश्नों का वर्गीकरण (Negative Error Count):</span>
+              <div class="grid grid-cols-4 gap-1 text-[10px]">
+                <input type="number" id="inputErrSilly" placeholder="Silly" class="px-1.5 py-1 rounded st-subtle font-mono text-center">
+                <input type="number" id="inputErrConcept" placeholder="Concept" class="px-1.5 py-1 rounded st-subtle font-mono text-center">
+                <input type="number" id="inputErrTime" placeholder="Time" class="px-1.5 py-1 rounded st-subtle font-mono text-center">
+                <input type="number" id="inputErrGuess" placeholder="Guess" class="px-1.5 py-1 rounded st-subtle font-mono text-center">
+              </div>
+            </div>
+
+            <button onclick="addNewMockEntry()" class="w-full py-2.5 rounded-xl bg-sky-500 text-white font-black text-xs shadow-md active:scale-95">
+              मॉक लॉग में जोड़ें +
+            </button>
+          </div>
+        </div>
+
+        <!-- Mocks Accuracy Chart -->
+        <div class="st-glass p-4 rounded-2xl space-y-3">
+          <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]">मॉक टेस्ट प्रगति व एक्यूरेसी कर्व</h4>
+          <div class="h-44 w-full">
+            <canvas id="chartMocksCanvas"></canvas>
+          </div>
+
+          <!-- Penalty Loss Strip -->
+          <div class="p-2.5 rounded-xl st-subtle border border-rose-500/25 flex items-center justify-between text-xs">
+            <span class="font-bold text-rose-500">📉 पेनाल्टी मार्क्स लॉस:</span>
+            <div class="font-mono flex items-center gap-2">
+              <span id="metricNegativeMarksLost" class="font-black text-rose-500">-0.0 Marks</span>
+              <span id="metricEstimatedRankDrop" class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-500 font-bold">~0 Ranks</span>
+            </div>
+          </div>
+
+          <!-- Table Container -->
+          <div class="overflow-x-auto no-scrollbar max-h-56">
+            <table class="w-full text-left text-xs"><tbody id="tableMocksBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: FEYNMAN ACTIVE RECALL ================= -->
+      <section id="tabContentFeynman" class="hidden space-y-4">
+        <div class="st-glass p-4 rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-black text-[var(--st-text-head)] flex items-center gap-1.5">
+              <span>💡</span> रिचर्ड फिनमैन एक्टिव रिकॉल
+            </h3>
+            <span id="feynmanCardCount" class="text-xs font-mono font-bold px-2 py-0.5 rounded-lg bg-sky-500/10 text-sky-500">0 Cards</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <select id="selectFeynmanSubject" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-bold outline-none text-[var(--st-text-head)]"></select>
+            <input type="text" id="inputFeynmanTopic" placeholder="कठिन टॉपिक (उदा. अनुच्छेद 21 / Bayes Theorem)" class="w-full px-3 py-2 rounded-xl st-subtle text-xs outline-none">
+            <textarea id="inputFeynmanExplanation" rows="3" placeholder="किताब बंद करके अपने शब्दों में 3-4 वाक्यों में समझाएं..." class="w-full p-2.5 rounded-xl st-subtle text-xs outline-none resize-none"></textarea>
+
+            <div class="flex items-center justify-between pt-1">
+              <div class="flex items-center gap-1 font-mono font-bold text-xs" id="clarityScorePills">
+                <button onclick="setRecallClarity(1)" class="w-6 h-6 rounded st-subtle text-rose-500">1</button>
+                <button onclick="setRecallClarity(2)" class="w-6 h-6 rounded st-subtle text-amber-500">2</button>
+                <button onclick="setRecallClarity(3)" class="w-6 h-6 rounded st-subtle text-sky-500">3</button>
+                <button onclick="setRecallClarity(4)" class="w-6 h-6 rounded st-subtle text-emerald-500">4</button>
+                <button onclick="setRecallClarity(5)" class="w-6 h-6 rounded bg-emerald-500 text-white font-black">5</button>
+              </div>
+
+              <button onclick="saveFeynmanRecallEntry()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-black text-xs shadow-md">
+                सेव करें +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]">मास्टर्ड फिनमैन कार्ड्स</h4>
+            <button onclick="clearAllFeynmanCards()" class="text-rose-500 text-xs">Clear</button>
+          </div>
+          <div class="overflow-y-auto no-scrollbar max-h-72 space-y-2" id="feynmanCardsContainer"></div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 6: WAR ROOM VIEW ================= -->
+      <section id="tabContentWarroom" class="hidden space-y-4">
+        <div class="st-glass p-4 rounded-2xl border border-amber-500/30 bg-amber-500/5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-black text-amber-500 flex items-center gap-1.5">
+              <span>⚔️</span> एग्जाम वॉर रूम
+            </span>
+            <span id="warroomReadinessScore" class="text-base font-black font-mono text-amber-500">0%</span>
+          </div>
+          <p class="text-[11px] text-[var(--st-text-muted)]">कमजोर अध्यायों, छूटे टॉपिक्स व अंतिम 48-घंटे रिवीजन चेकलिस्ट का विश्लेषण</p>
+        </div>
+
+        <!-- 4-Quadrant Matrix (Compact Mobile Cards) -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2.5 rounded-xl st-subtle border border-rose-500/30">
+            <span class="font-extrabold text-rose-500 block mb-1 text-[11px]">🚨 Q1: Critical</span>
+            <div id="quadrantQ1" class="space-y-1 text-[10px] text-[var(--st-text-muted)]"></div>
+          </div>
+          <div class="p-2.5 rounded-xl st-subtle border border-emerald-500/30">
+            <span class="font-extrabold text-emerald-500 block mb-1 text-[11px]">⭐ Q2: Boosters</span>
+            <div id="quadrantQ2" class="space-y-1 text-[10px] text-[var(--st-text-muted)]"></div>
+          </div>
+          <div class="p-2.5 rounded-xl st-subtle border border-amber-500/30">
+            <span class="font-extrabold text-amber-500 block mb-1 text-[11px]">⚠️ Q3: Needs Work</span>
+            <div id="quadrantQ3" class="space-y-1 text-[10px] text-[var(--st-text-muted)]"></div>
+          </div>
+          <div class="p-2.5 rounded-xl st-subtle border border-blue-500/30">
+            <span class="font-extrabold text-blue-500 block mb-1 text-[11px]">🛡️ Q4: Routine</span>
+            <div id="quadrantQ4" class="space-y-1 text-[10px] text-[var(--st-text-muted)]"></div>
+          </div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <h4 class="text-xs font-black uppercase text-rose-500">🚨 तत्काल रिवीजन आवश्यक (Urgent)</h4>
+          <div id="warroomUrgentList" class="space-y-1.5 text-xs"></div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <h4 class="text-xs font-black uppercase text-emerald-500">🛡️ सुरक्षित विषय (Stronghold)</h4>
+          <div id="warroomSafeList" class="space-y-1.5 text-xs"></div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 7: ANALYTICS & CHARTS ================= -->
+      <section id="tabContentAnalytics" class="hidden space-y-4">
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]" id="chart1Title">दैनिक निरंतरता ट्रेंड</h4>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-500">Smooth</span>
+          </div>
+          <div class="h-44 w-full">
+            <canvas id="chartTrendCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]" id="chart2Title">मासिक लक्ष्य पूर्णता (Doughnut)</h4>
+          <div class="h-48 w-full">
+            <canvas id="chartDoughnutCanvas"></canvas>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-center text-xs pt-2 border-t border-[var(--st-border)]">
+            <div class="p-1.5 rounded-xl st-subtle">
+              <span id="lblDoughnutCompleted" class="text-[var(--st-text-muted)] block text-[9px] uppercase font-bold">पूर्ण</span>
+              <span id="valDoughnutDone" class="text-emerald-500 font-black text-xs">0 hrs</span>
+            </div>
+            <div class="p-1.5 rounded-xl st-subtle">
+              <span id="lblDoughnutPending" class="text-[var(--st-text-muted)] block text-[9px] uppercase font-bold">शेष</span>
+              <span id="valDoughnutLeft" class="text-sky-500 font-black text-xs">0 hrs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]" id="chart3Title">विषय संतुलन रडार (Radar)</h4>
+          <div class="h-48 w-full">
+            <canvas id="chartRadarCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]" id="chart4Title">साप्ताहिक घंटे (Weekly Bar)</h4>
+          <div class="h-44 w-full">
+            <canvas id="chartWeeklyCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]" id="heatmapTitle">🟩 गतिविधि हीटमैप</h4>
+          <div id="heatmapGridContainer" class="flex flex-wrap gap-1.5 pt-1"></div>
+        </div>
+
+        <div class="st-glass p-4 rounded-2xl space-y-2">
+          <h4 class="text-xs font-black uppercase text-[var(--st-text-muted)]">⚡ 24-घंटे स्टडी क्लॉक</h4>
+          <div class="grid grid-cols-6 gap-1 text-center font-mono font-bold text-[9px]" id="hourlyDensityGrid"></div>
+        </div>
+
+        <!-- Action Export/Print buttons in mobile view -->
+        <div class="flex items-center gap-2 pt-2">
+          <button onclick="copyDailyTelegramReport()" class="flex-1 py-2.5 rounded-xl st-subtle text-xs font-bold flex items-center justify-center gap-1">
+            <span>📋</span> <span>शेयर कार्ड</span>
+          </button>
+          <button onclick="generatePrintReport()" class="flex-1 py-2.5 rounded-xl st-subtle text-xs font-bold flex items-center justify-center gap-1">
+            <span>🖨️</span> <span>PDF रिपोर्ट</span>
+          </button>
+          <button onclick="exportUserDataJSON()" class="p-2.5 rounded-xl st-subtle text-xs" title="Export JSON">📥</button>
+        </div>
+
+        <div class="hidden">
+          <h2 id="analyticsHeading"></h2>
+          <p id="analyticsSubheading"></p>
+          <p id="chart1Subtitle"></p>
+          <p id="chart2Subtitle"></p>
+          <p id="chart3Subtitle"></p>
+          <p id="chart4Subtitle"></p>
+          <p id="heatmapSubtitle"></p>
+        </div>
+      </section>
+
+      <!-- Compact Footer -->
+      <footer class="text-center py-4 text-[10px] text-[var(--st-text-muted)] space-y-1">
+        <p id="footerCopy">Smart Study Pro • ऑल-इन-वन कॉम्पिटेटिव एग्जाम एस्पिरेंट OS</p>
+        <p id="footerSub">डेटा आपके ब्राउज़र में ऑटो-सेव रहता है।</p>
+      </footer>
+
+    </main>
+
+    <!-- NATIVE FIXED BOTTOM TAB BAR (TOUCH-OPTIMIZED) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--st-card)]/95 backdrop-blur-md border-t border-[var(--st-border)] px-1.5 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-2xl">
+      <div class="flex items-center justify-between max-w-md mx-auto overflow-x-auto no-scrollbar gap-1">
+        <button type="button" onclick="switchTab('matrix')" id="navBtn_matrix" class="flex flex-col items-center justify-center gap-0.5 text-sky-500 py-1 px-2 rounded-xl transition-all flex-shrink-0 active:scale-95">
+          <span class="text-xl leading-none">📋</span>
+          <span class="text-[10px] font-bold">मैट्रिक्स</span>
+        </button>
+
+        <button type="button" onclick="switchTab('spacedhub')" id="navBtn_spacedhub" class="flex flex-col items-center justify-center gap-0.5 text-[var(--st-text-muted)] py-1 px-2 rounded-xl transition-all flex-shrink-0 active:scale-95">
+          <span class="text-xl leading-none">🔁</span>
+          <span class="text-[10px] font-bold">रिवीजन</span>
+        </button>
+
+        <button type="button" onclick="switchTab('focus')" id="navBtn_focus" class="flex flex-col items-center justify-center gap-0.5 text-[var(--st-text-muted)] py-1 px-2 rounded-xl transition-all flex-shrink-0 active:scale-95">
+          <span class="text-xl leading-none">⏱️</span>
+          <span class="text-[10px] font-bold">फोकस</span>
+        </button>
+
+        <button type="button" onclick="switchTab('mocks')" id="navBtn_mocks" class="flex flex-col items-center justify-center gap-0.5 text-[var(--st-text-muted)] py-1 px-2 rounded-xl transition-all flex-shrink-0 active:scale-95">
+          <span class="text-xl leading-none">📝</span>
+          <span class="text-[10px] font-bold">मॉक टेस्ट</span>
+        </button>
+
+        <button type="button" onclick="switchTab('feynman')" id="navBtn_feynman" class="flex flex-col items-center justify-center gap-0.5 text-[var(--st-text-muted)] py-1 px-2 rounded-xl transition-all flex-shrink-0 active:scale-95">
+          <span class="text-xl leading-none">💡</span>
+          <span class="text-[10px] font-bold">रिकॉल</span>
+        </button>
+
+        <button type="button" onclick="switchTab('warroom')" id="navBtn_warroom" class="flex flex-col items-center justify-center gap-0.5 text-[var(--st-text-muted)] py-1 px-2 rounded-xl transition-all flex-shrink-0 active:scale-95">
+          <span class="text-xl leading-none">⚔️</span>
+          <span class="text-[10px] font-bold">वॉर रूम</span>
+        </button>
+
+        <button type="button" onclick="switchTab('analytics')" id="navBtn_analytics" class="flex flex-col items-center justify-center gap-0.5 text-[var(--st-text-muted)] py-1 px-2 rounded-xl transition-all flex-shrink-0 active:scale-95">
+          <span class="text-xl leading-none">📈</span>
+          <span class="text-[10px] font-bold">चार्ट्स</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ================= ALL MODALS & DRAWERS (RETAINED) ================= -->
+
+    <!-- MODAL 1: ADD NEW SUBJECT -->
+    <div id="modalAddSubject" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="st-glass rounded-t-3xl sm:rounded-3xl p-5 w-full max-w-md space-y-3 st-animate-fade">
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--st-border)]">
+          <h3 id="modalAddHeading" class="font-display font-black text-sm text-[var(--st-text-head)]">नया परीक्षा सिलेबस व विषय जोड़ें</h3>
+          <button onclick="closeSubjectModal()" class="text-slate-400 text-lg">✕</button>
+        </div>
+        <p id="modalAddSubtitle" class="text-[11px] text-[var(--st-text-muted)]">सब्जेक्ट का नाम, परीक्षा श्रेणी, टारगेट दिन और दैनिक अध्ययन के घंटे सेट करें।</p>
+
+        <div class="space-y-3">
+          <div>
+            <label id="lblInputName" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-1">विषय या मॉड्यूल का नाम</label>
+            <input type="text" id="inputSubjectName" placeholder="उदा. भारतीय संविधान व राजव्यवस्था" class="w-full px-3 py-2 rounded-xl st-subtle text-xs outline-none font-medium">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label id="lblInputCat" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-1">परीक्षा श्रेणी</label>
+              <select id="inputSubjectCat" class="w-full px-2.5 py-2 rounded-xl st-subtle text-xs outline-none font-medium">
+                <option value="UPSC / IAS">UPSC / Civil Services</option>
+                <option value="SSC CGL / CHSL">SSC Exams</option>
+                <option value="Banking / IBPS">Banking & Insurance</option>
+                <option value="State PCS">State PCS / Police</option>
+                <option value="Railway / RRB">Railway Exams</option>
+                <option value="NEET / JEE">NEET / JEE</option>
+                <option value="Defense / NDA">Defense</option>
+                <option value="General Prep">General Studies</option>
+              </select>
+            </div>
+            <div>
+              <label id="lblInputIcon" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-1">इमोजी आइकॉन</label>
+              <select id="inputSubjectIcon" class="w-full px-2.5 py-2 rounded-xl st-subtle text-xs outline-none">
+                <option value="📐">📐 गणित (Quant)</option>
+                <option value="🧩">🧩 रीजनिंग</option>
+                <option value="🌍">🌍 भूगोल</option>
+                <option value="📜">📜 इतिहास</option>
+                <option value="🏛️">🏛️ राजव्यवस्था</option>
+                <option value="📈">📈 अर्थव्यवस्था</option>
+                <option value="🔬">🔬 सामान्य विज्ञान</option>
+                <option value="📰">📰 करेंट अफेयर्स</option>
+                <option value="📖">📖 अंग्रेजी</option>
+                <option value="📝">📝 मॉक टेस्ट</option>
+                <option value="🔁">🔁 रिवीजन</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label id="lblInputDaysGoal" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-1">टारगेट दिन</label>
+              <input type="number" id="inputSubjectDaysGoal" min="1" max="31" value="26" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-mono font-bold text-center">
+            </div>
+            <div>
+              <label id="lblInputHours" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-1">दैनिक घंटे</label>
+              <input type="number" id="inputSubjectHours" min="0.5" max="16" step="0.5" value="2" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-mono font-bold text-center">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button onclick="closeSubjectModal()" id="btnCancelModal" class="px-3.5 py-2 text-xs font-bold rounded-xl text-[var(--st-text-muted)]">रद्द करें</button>
+          <button onclick="submitNewSubject()" id="btnSaveModal" class="px-5 py-2 text-xs font-black rounded-xl bg-sky-500 text-white shadow-md">मैट्रिक्स में जोड़ें</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 2: MANAGE SUBJECTS DRAWER -->
+    <div id="modalManageDrawer" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="st-glass rounded-t-3xl sm:rounded-3xl p-5 w-full max-w-md max-h-[80vh] flex flex-col space-y-3 st-animate-fade">
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--st-border)]">
+          <div>
+            <h3 id="manageTitle" class="font-display font-black text-sm text-[var(--st-text-head)]">सिलेबस व विषय कस्टमाइज़ / हटाएं</h3>
+            <p id="manageSubtitle" class="text-[10px] text-[var(--st-text-muted)]">जो विषय आप नहीं पढ़ना चाहते उन्हें हटाएं।</p>
+          </div>
+          <button onclick="closeManageDrawer()" class="text-slate-400 text-lg">✕</button>
+        </div>
+        <div class="overflow-y-auto no-scrollbar flex-1 space-y-2" id="manageItemsListContainer"></div>
+        <div class="pt-2 border-t border-[var(--st-border)] flex items-center justify-between">
+          <button onclick="deleteAllCustomItemsPrompt()" class="text-[11px] font-bold text-rose-500">🗑️ सभी विषय हटाएं</button>
+          <button onclick="closeManageDrawer()" class="px-4 py-1.5 text-xs font-black rounded-xl bg-blue-600 text-white">पूर्ण (Done)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 3: QR CODE -->
+    <div id="modalQRCode" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="st-glass rounded-3xl p-5 w-full max-w-xs text-center space-y-3 st-animate-fade">
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--st-border)]">
+          <h3 class="font-display font-black text-sm text-[var(--st-text-head)]">📱 मोबाइल पर खोलें</h3>
+          <button onclick="closeQRCodeModal()" class="text-slate-400 text-lg">✕</button>
+        </div>
+        <div class="p-3 bg-white rounded-2xl flex items-center justify-center mx-auto w-[180px] h-[180px]" id="qrCodeContainer"></div>
+        <div class="flex items-center gap-1.5">
+          <input type="text" id="sharePageUrlInput" readonly class="w-full px-2.5 py-1.5 text-[10px] rounded-xl st-subtle font-mono outline-none truncate">
+          <button onclick="copySharePageUrl()" id="btnCopyUrl" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-white flex-shrink-0">कॉपी</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 4: ONBOARDING PROFILE SETUP -->
+    <div id="modalExamSetup" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="st-glass rounded-3xl p-5 w-full max-w-sm space-y-3 st-animate-fade">
+        <div class="text-center">
+          <div class="w-12 h-12 mx-auto mb-1 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white text-xl">🎯</div>
+          <h2 id="onboardingTitle" class="font-display font-black text-base text-[var(--st-text-head)]">एस्पिरेंट प्रोफाइल व टारगेट एग्जाम</h2>
+          <p id="onboardingSubtitle" class="text-[10px] text-[var(--st-text-muted)]">अपनी लक्षित परीक्षा व आधिकारिक सिलेबस चुनें।</p>
+        </div>
+
+        <div class="space-y-2.5">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-0.5">विद्यार्थी का नाम</label>
+            <input type="text" id="inputStudentName" placeholder="उदा. राहुल शर्मा" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-bold outline-none">
+          </div>
+          <div>
+            <label id="lblOnboardSelect" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-0.5">परीक्षा का चयन करें</label>
+            <select id="selectExamPreset" onchange="handlePresetExamChange(this.value)" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-medium outline-none">
+              <option value="UPSC Civil Services (IAS/IPS)">🏛️ UPSC Civil Services</option>
+              <option value="SSC CGL / CHSL">📊 SSC CGL / CHSL</option>
+              <option value="IBPS PO / Clerk / SBI">🏦 Banking & PO</option>
+              <option value="Railway NTPC / Group D">🚆 Railway NTPC</option>
+              <option value="NEET UG">🩺 NEET UG</option>
+              <option value="custom">✏️ अन्य / कस्टम परीक्षा...</option>
+            </select>
+          </div>
+          <div id="wrapperCustomExamName">
+            <label id="lblOnboardCustomName" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-0.5">परीक्षा का नाम</label>
+            <input type="text" id="inputExamName" placeholder="उदा. UPSC CSE 2027" class="w-full px-3 py-2 rounded-xl st-subtle text-xs font-semibold outline-none">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label id="lblOnboardDate" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-0.5">एग्जाम दिनांक</label>
+              <input type="date" id="inputExamTargetDate" onchange="syncDaysFromDate(this.value)" class="w-full px-2 py-1.5 rounded-xl st-subtle text-[11px] font-mono font-bold outline-none">
+            </div>
+            <div>
+              <label id="lblOnboardDays" class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-0.5">शेष दिन</label>
+              <input type="number" id="inputExamTargetDays" min="1" max="1000" oninput="syncDateFromDays(this.value)" class="w-full px-2 py-1.5 rounded-xl st-subtle text-[11px] font-mono font-bold text-center outline-none">
+            </div>
+          </div>
+          <label class="flex items-center gap-2 cursor-pointer text-[11px] font-bold text-sky-500 pt-0.5">
+            <input type="checkbox" id="checkAutoLoadBundle" checked class="w-4 h-4 accent-sky-500 rounded">
+            <span>आधिकारिक सिलेबस ऑटो-लोड करें</span>
+          </label>
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button onclick="closeExamSetupModal()" class="w-1/3 py-2 text-xs font-bold rounded-xl st-subtle text-[var(--st-text-muted)]">रद्द करें</button>
+          <button onclick="saveExamSetupAndContinue()" id="btnSaveExamOnboard" class="w-2/3 py-2 text-xs font-black rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md">
+            <span>सेव करें ➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 5: DAILY NOTES -->
+    <div id="modalDailyNotes" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="st-glass rounded-t-3xl sm:rounded-3xl p-5 w-full max-w-md space-y-3 st-animate-fade">
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--st-border)]">
+          <h3 class="font-display font-black text-sm text-[var(--st-text-head)]">📓 आज के नोट्स व दैनिक लक्ष्य</h3>
+          <button onclick="closeDailyNotesModal()" class="text-slate-400 text-lg">✕</button>
+        </div>
+        <span class="text-xs text-sky-500 font-mono block" id="notesDateHeader">Day Notes</span>
+        <textarea id="inputDayNotesText" rows="5" placeholder="आज क्या खास पढ़ा? कौन से टॉपिक्स बाकी रह गए..." class="w-full p-2.5 rounded-xl st-subtle text-xs outline-none resize-none"></textarea>
+        <button onclick="saveDailyNotes()" class="w-full py-2.5 rounded-xl bg-sky-500 text-white font-black text-xs shadow-md">नोट्स सेव करें 💾</button>
+      </div>
+    </div>
+
+    <!-- MODAL 6: MICRO-TOPIC CHAPTERS -->
+    <div id="modalTopicManager" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="st-glass rounded-t-3xl sm:rounded-3xl p-5 w-full max-w-md max-h-[80vh] flex flex-col space-y-3 st-animate-fade">
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--st-border)]">
+          <div>
+            <h3 class="font-display font-black text-sm text-[var(--st-text-head)]" id="topicModalHeading">📚 माइक्रो-चैप्टर्स</h3>
+            <span class="text-[10px] text-sky-500 font-mono" id="topicModalSub">Subject Breakdown</span>
+          </div>
+          <button onclick="closeTopicModal()" class="text-slate-400 text-lg">✕</button>
+        </div>
+
+        <div class="flex items-center gap-1.5 p-1 bg-black/10 dark:bg-white/5 rounded-xl text-xs font-bold">
+          <button onclick="switchTopicModalTab('chapters')" id="btnTabChapters" class="flex-1 py-1 rounded-lg bg-sky-500 text-white text-[11px] font-black">📑 चैप्टर्स</button>
+          <button onclick="switchTopicModalTab('logs')" id="btnTabLogs" class="flex-1 py-1 rounded-lg text-[var(--st-text-muted)] text-[11px]">📜 1-7-30 लॉग्स</button>
+        </div>
+
+        <div id="viewTopicChapters" class="space-y-3 flex-1 overflow-hidden flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <input type="text" id="inputTopicSource" placeholder="प्राथमिक पुस्तक / स्रोत..." class="w-full px-2.5 py-1.5 rounded-xl st-subtle text-xs outline-none">
+            <button onclick="saveSubjectSource()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-sky-500 text-white flex-shrink-0">सेव</button>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <input type="text" id="inputNewChapterName" placeholder="नया अध्याय जोड़ें..." class="w-full px-2.5 py-1.5 rounded-xl st-subtle text-xs outline-none">
+            <button onclick="addNewChapter()" class="px-3 py-1.5 text-xs font-black rounded-xl bg-emerald-600 text-white flex-shrink-0">+</button>
+          </div>
+          <div class="flex-1 overflow-y-auto no-scrollbar space-y-1.5" id="topicChaptersList"></div>
+        </div>
+
+        <div id="viewTopicLogs" class="hidden flex-1 overflow-y-auto no-scrollbar space-y-2">
+          <div id="topicSpacedLogsList" class="space-y-2"></div>
+        </div>
+
+        <div class="pt-2 border-t border-[var(--st-border)] flex items-center justify-between">
+          <span class="text-[11px] text-[var(--st-text-muted)] font-mono" id="chaptersCountLabel">0 Chapters</span>
+          <button onclick="closeTopicModal()" class="px-4 py-1.5 text-xs font-black rounded-xl bg-blue-600 text-white">पूर्ण</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 7: SHORTCUTS -->
+    <div id="modalShortcuts" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="st-glass rounded-3xl p-5 w-full max-w-xs space-y-2.5 text-xs st-animate-fade">
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--st-border)]">
+          <h3 class="font-display font-black text-sm text-[var(--st-text-head)]">⌨️ कीबोर्ड शॉर्टकट्स</h3>
+          <button onclick="closeShortcutsModal()" class="text-slate-400 text-lg">✕</button>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between p-1.5 rounded-lg st-subtle"><span>पोमोडोरो स्टार्ट/पॉज़</span><kbd class="font-mono text-sky-500 font-bold">Space</kbd></div>
+          <div class="flex justify-between p-1.5 rounded-lg st-subtle"><span>नया सिलेबस</span><kbd class="font-mono text-sky-500 font-bold">N</kbd></div>
+          <div class="flex justify-between p-1.5 rounded-lg st-subtle"><span>दैनिक नोट्स</span><kbd class="font-mono text-sky-500 font-bold">D</kbd></div>
+          <div class="flex justify-between p-1.5 rounded-lg st-subtle"><span>थीम स्विच</span><kbd class="font-mono text-sky-500 font-bold">T</kbd></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 8: MANDATORY TOPIC & PAGE LOGGING MODAL -->
+    <div id="modalTopicStudyLog" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="st-glass rounded-t-3xl sm:rounded-3xl p-5 w-full max-w-md space-y-3 st-animate-fade">
+        <div class="flex items-center justify-between pb-2 border-b border-[var(--st-border)]">
+          <div>
+            <h3 class="font-display font-black text-sm text-[var(--st-text-head)]">टॉपिक व पेज विवरण दर्ज करें</h3>
+            <p class="text-[11px] text-sky-500 font-bold" id="logModalSubjectHeader">Subject Name</p>
+          </div>
+          <button onclick="cancelTopicStudyLog()" class="text-slate-400 text-lg">✕</button>
+        </div>
+
+        <div class="p-2 rounded-xl st-subtle border border-amber-500/30 bg-amber-500/5 text-[11px] text-amber-600 dark:text-amber-400">
+          <b>1-7-30 नियम:</b> यह जानकारी भरते ही स्वतः 1 दिन, 7 दिन और 30 दिन बाद रिवीजन शेड्यूल हो जाएगा।
+        </div>
+
+        <div class="space-y-2.5">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-[var(--st-text-head)] mb-0.5">आज क्या टॉपिक पढ़ा? *</label>
+            <input type="text" id="inputLogTopicName" placeholder="उदा. मौलिक अधिकार (अनुच्छेद 14-24)" class="w-full px-3 py-2 rounded-xl st-subtle text-xs outline-none font-semibold">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-[var(--st-text-head)] mb-0.5">पेज नंबर / रेंज *</label>
+              <input type="text" id="inputLogPageRange" placeholder="उदा. Pg 42 - 58" class="w-full px-3 py-2 rounded-xl st-subtle text-xs outline-none font-mono font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold uppercase text-[var(--st-text-head)] mb-0.5">कुल पढ़े गए पेज</label>
+              <input type="number" id="inputLogTotalPages" placeholder="16" min="1" class="w-full px-3 py-2 rounded-xl st-subtle text-xs outline-none font-mono font-bold text-center">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-[var(--st-text-muted)] mb-0.5">त्वरित रिवीजन नोट्स (वैकल्पिक)</label>
+            <textarea id="inputLogKeyNotes" rows="2" placeholder="शॉर्ट फॉर्मूला या मुख्य बिंदु..." class="w-full p-2 rounded-xl st-subtle text-xs outline-none resize-none"></textarea>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button onclick="cancelTopicStudyLog()" class="px-3.5 py-2 text-xs font-bold rounded-xl text-[var(--st-text-muted)]">रद्द करें</button>
+          <button onclick="confirmTopicStudyLog()" class="px-5 py-2 text-xs font-black rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md">
+            सेव करें ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- IN-APP FLOATING TOAST -->
+    <div id="inAppToast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 px-4 py-2.5 rounded-2xl bg-slate-900/90 text-white border border-sky-500/40 shadow-2xl flex items-center gap-2 text-xs font-bold whitespace-nowrap">
+      <span id="toastIcon">💡</span>
+      <span id="toastMsg">Action completed!</span>
+    </div>
+
+  </div>
+
+  <!-- HIDDEN PRINT PERFORMANCE REPORT CONTAINER -->
+  <div id="printReportSection" class="hidden p-6 max-w-3xl mx-auto space-y-4 bg-white text-slate-900 font-sans">
+    <div class="border-b-2 border-slate-900 pb-3">
+      <h1 class="text-xl font-black uppercase">Smart Study Pro • Aspirant Performance Card</h1>
+      <p class="text-xs font-semibold text-slate-600" id="printExamDetails">Exam: Target Exam</p>
+      <p class="text-xs font-bold text-indigo-600" id="printStudentDetails">Aspirant: Student Name</p>
+      <span class="text-xs font-mono font-bold text-slate-500 block" id="printReportDate">Month Report</span>
+    </div>
+
+    <div class="grid grid-cols-4 gap-2 text-center text-xs">
+      <div class="p-2 border rounded-xl"><span class="text-[9px] uppercase text-slate-500 block">Total Hours</span><span class="text-base font-black font-mono" id="printTotalHours">0.0h</span></div>
+      <div class="p-2 border rounded-xl"><span class="text-[9px] uppercase text-slate-500 block">Streak</span><span class="text-base font-black font-mono" id="printStreak">0 Days</span></div>
+      <div class="p-2 border rounded-xl"><span class="text-[9px] uppercase text-slate-500 block">Strong Area</span><span class="text-xs font-bold truncate block mt-0.5" id="printTopSub">-</span></div>
+      <div class="p-2 border rounded-xl"><span class="text-[9px] uppercase text-slate-500 block">Rank</span><span class="text-xs font-black text-indigo-600 block mt-0.5" id="printRank">Novice</span></div>
+    </div>
+
+    <table class="w-full text-left border border-slate-300 text-xs">
+      <thead class="bg-slate-100 font-bold">
+        <tr>
+          <th class="p-2 border">विषय</th>
+          <th class="p-2 border text-center">श्रेणी</th>
+          <th class="p-2 border text-center">घंटे/दिन</th>
+          <th class="p-2 border text-center">पूर्ण दिन</th>
+          <th class="p-2 border text-center">प्रगति %</th>
+        </tr>
+      </thead>
+      <tbody id="printTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE (100% UNCHANGED LOGIC) -->
+  <script>
+    const I18N = {
+      hi: {
+        subtitle: "प्रतिस्पर्धी परीक्षा (Competitive Exam) समग्र अध्ययन व सिलेबस विश्लेषण डैशबोर्ड",
+        btnAdd: "नया सिलेबस",
+        btnManage: "मैनेज",
+        card1: "कुल अध्ययन समय",
+        card2: "आज का अध्ययन",
+        card2Note: "दैनिक लक्ष्य अनुसार",
+        card3: "कंसिस्टेंसी स्ट्रीक",
+        card3Note: "बिना ब्रेक निरंतर अध्ययन",
+        card4: "मजबूत विषय (Strong Area)",
+        card5: "रिवीजन अलर्ट (Need Attention)",
+        card5Note: "पुनरावृत्ति (Revision) की जरूरत",
+        mobileSliderTitle: "आज का दिन (Locked to Today)",
+        desktopTableTitleStudy: "कॉम्पिटेटिव एग्जाम सिलेबस व दैनिक अध्ययन मैट्रिक्स",
+        desktopTableSubtitle: "प्रतिदिन पूर्ण किए गए टॉपिक्स को टिक करें। '⚙️ मैनेज' से विषय घटाएं या नया सिलेबस जोड़ें।",
+        thSubject: "परीक्षा विषय / मॉड्यूल",
+        thCategory: "श्रेणी",
+        thGoal: "लक्ष्य",
+        thHours: "घंटे/दिन",
+        thProgress: "प्रगति",
+        dailyTotalDone: "दैनिक पूर्ण विषय:",
+        analyticsHeading: "गहन अध्ययन विश्लेषण व प्रगति चार्ट्स (Deep Analytics)",
+        analyticsSubheading: "अपनी पढ़ाई के घंटे, निरंतरता और विषयवार कवरेज का संपूर्ण विश्लेषण",
+        chart1Title: "दैनिक अध्ययन निरंतरता ट्रेंड (Daily Study Trend)",
+        chart1Subtitle: "प्रतिदिन सिलेबस कवरेज का प्रतिशत",
+        chart2Title: "कुल अध्ययन समय वितरण (Study Hours Distribution)",
+        chart2Subtitle: "विषयवार दिए गए अध्ययन घंटों का विश्लेषण",
+        lblDone: "पूर्ण (Completed)",
+        lblPending: "शेष (Remaining)",
+        chart3Title: "सिलेबस संतुलन व मास्टरी रडार (Syllabus Balance Radar)",
+        chart3Subtitle: "कौन सा विषय छूट रहा है और किसमें आप मजबूत हैं",
+        chart4Title: "साप्ताहिक अध्ययन घंटे तुलना (Weekly Study Hours)",
+        chart4Subtitle: "सप्ताह 1 से सप्ताह 5 तक कुल घंटे",
+        heatmapTitle: "अध्ययन गतिविधि मैट्रिक्स (Monthly Activity Heatmap)",
+        heatmapSubtitle: "वीडियो गेम स्टेट ग्रिड की तरह अपने हर दिन के अध्ययन की तीव्रता देखें",
+        footerCopy: "Smart Study Pro • ऑल-इन-वन कॉम्पिटेटिव एग्जाम एस्पिरेंट ऑपरेटिंग सिस्टम",
+        footerSub: "डेटा आपके ब्राउज़र में ऑटो-सेव रहता है। रिफ्रेश करने पर कभी डिलीट नहीं होगा।",
+        modalAddHeadingStudy: "नया परीक्षा सिलेबस व विषय जोड़ें",
+        modalAddSubtitle: "सब्जेक्ट का नाम, परीक्षा श्रेणी, टारगेट दिन और दैनिक अध्ययन के घंटे सेट करें।",
+        lblInputName: "विषय या मॉड्यूल का नाम (Subject Name)",
+        lblInputCat: "परीक्षा श्रेणी (Exam Category)",
+        lblInputIcon: "इमोजी आइकॉन",
+        lblInputDaysGoal: "टारगेट दिन (Target Days)",
+        lblInputHours: "दैनिक अध्ययन घंटे (Study Hours)",
+        btnCancel: "रद्द करें",
+        btnSave: "मैट्रिक्स में जोड़ें",
+        manageTitleStudy: "स्टडी सिलेबस कस्टमाइज़ / हटाएं",
+        manageSubtitle: "जो विषय आप नहीं पढ़ना चाहते उन्हें डिलीट करें, या अपने नए विषय रखें।",
+        daysUnit: "दिन",
+        analyzing: "विश्लेषण हो रहा है...",
+        allOnTrack: "सभी विषय ट्रैक पर हैं 🎯",
+        langBadge: "EN",
+        themeLight: "लाइट",
+        themeDark: "डार्क",
+        onboardingTitle: "एस्पिरेंट प्रोफाइल व टारगेट एग्जाम",
+        onboardingSubtitle: "अपनी पहचान दर्ज करें और अपनी लक्षित परीक्षा व 1-क्लिक सिलेबस चुनें।",
+        lblOnboardSelect: "परीक्षा का चयन करें (Select Exam)",
+        lblOnboardCustomName: "परीक्षा का नाम (Exam Name)",
+        lblOnboardDate: "टारगेट एग्जाम दिनांक",
+        lblOnboardDays: "या शेष टारगेट दिन",
+        btnSaveExamOnboard: "प्रोफाइल सेव करें ➔",
+        tabMatrix: "दैनिक अध्ययन मैट्रिक्स (Matrix)",
+        tabFocus: "पोमोडोरो व ज़ेन डेस्क (Focus Desk)",
+        tabMocks: "मॉक टेस्ट व PYQ लॉग (Mocks)",
+        tabWarroom: "एग्जाम वॉर रूम (War Room)",
+        tabAnalytics: "डीप एनालिटिक्स व चार्ट्स (Analytics)"
+      },
+      en: {
+        subtitle: "Comprehensive Competitive Exam Syllabus, Deep Study & Analytics Dashboard",
+        btnAdd: "+ Add Subject",
+        btnManage: "Manage",
+        card1: "Total Study Hours",
+        card2: "Today's Study",
+        card2Note: "Based on daily target",
+        card3: "Consistency Streak",
+        card3Note: "Consecutive study days",
+        card4: "Strong Area (Mastered)",
+        card5: "Revision Alert (Lagging)",
+        card5Note: "Requires immediate revision",
+        mobileSliderTitle: "Today's Target (Locked to Live Date)",
+        desktopTableTitleStudy: "Competitive Exam Syllabus & Daily Study Matrix",
+        desktopTableSubtitle: "Tick completed topics daily. Add custom subjects or remove topics via '⚙️ Manage'.",
+        thSubject: "Subject / Module",
+        thCategory: "Category",
+        thGoal: "Target",
+        thHours: "Hours/Day",
+        thProgress: "Progress",
+        dailyTotalDone: "Daily Completed Topics:",
+        analyticsHeading: "Deep Study Analytics & Visual Insights",
+        analyticsSubheading: "Multi-chart analysis of study velocity, hours and syllabus coverage",
+        chart1Title: "Daily Study Velocity Curve (Area Chart)",
+        chart1Subtitle: "Percentage of syllabus completed each day",
+        chart2Title: "Study Hours Distribution (Time Share)",
+        chart2Subtitle: "Breakdown of total study hours invested per subject",
+        lblDone: "Completed",
+        lblPending: "Remaining",
+        chart3Title: "Syllabus Balance Radar (Mastery Radar)",
+        chart3Subtitle: "Diagnose neglected vs mastered exam topics",
+        chart4Title: "Weekly Study Hours Invested (Bar Chart)",
+        chart4Subtitle: "Total study hours invested across Week 1 to Week 5",
+        heatmapTitle: "Activity Matrix Heatmap (Study Grid)",
+        heatmapSubtitle: "Gamified RPG-style visual activity map of every single day",
+        footerCopy: "Smart Study Pro • All-in-One Aspirant Operating System",
+        footerSub: "All data is auto-saved in your browser localStorage. Never lost on page reload.",
+        modalAddHeadingStudy: "Add New Exam Syllabus / Subject",
+        modalAddSubtitle: "Set subject name, exam category, target days, and daily study hours.",
+        lblInputName: "Subject or Module Name",
+        lblInputCat: "Exam Category",
+        lblInputIcon: "Emoji Icon",
+        lblInputDaysGoal: "Target Days",
+        lblInputHours: "Daily Study Hours",
+        btnCancel: "Cancel",
+        btnSave: "Add to Matrix",
+        manageTitleStudy: "Manage & Remove Exam Subjects",
+        manageSubtitle: "Delete defaults or custom subjects anytime and customize completely.",
+        daysUnit: "Days",
+        analyzing: "Analyzing...",
+        allOnTrack: "All subjects on track 🎯",
+        langBadge: "हिन्दी",
+        themeLight: "Light",
+        themeDark: "Dark",
+        onboardingTitle: "Aspirant Profile & Target Exam",
+        onboardingSubtitle: "Enter your identity and select your target exam blueprint.",
+        lblOnboardSelect: "Select Target Exam",
+        lblOnboardCustomName: "Target Exam Name",
+        lblOnboardDate: "Target Exam Date",
+        lblOnboardDays: "Or Remaining Target Days",
+        btnSaveExamOnboard: "Save Profile ➔",
+        tabMatrix: "Daily Study Matrix",
+        tabFocus: "Pomodoro & Zen Desk",
+        tabMocks: "Mock Test & PYQ Log",
+        tabWarroom: "Exam War Room",
+        tabAnalytics: "Deep Analytics & Charts"
+      }
+    };
+
+    const MONTH_NAMES = {
+      hi: ["जनवरी", "फ़रवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई", "अगस्त", "सितंबर", "अक्टूबर", "नवंबर", "दिसंबर"],
+      en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    };
+
+    const WEEK_DAYS = {
+      hi: ['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'],
+      en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    };
+
+    const EXAM_BUNDLES = {
+      "UPSC Civil Services (IAS/IPS)": [
+        { name: "भारतीय राजव्यवस्था (Indian Polity)", cat: "UPSC / IAS", icon: "🏛️", goal: 26, hours: 2.5 },
+        { name: "आधुनिक इतिहास (Modern History)", cat: "UPSC / IAS", icon: "📜", goal: 24, hours: 2 },
+        { name: "भूगोल व पर्यावरण (Geography & Env)", cat: "UPSC / IAS", icon: "🌍", goal: 24, hours: 2 },
+        { name: "भारतीय अर्थव्यवस्था (Economy)", cat: "UPSC / IAS", icon: "📈", goal: 22, hours: 2 },
+        { name: "दैनिक करेंट अफेयर्स व अखबार", cat: "UPSC / IAS", icon: "📰", goal: 28, hours: 1.5 },
+        { name: "CSAT (क्वांट व रीजनिंग)", cat: "UPSC / IAS", icon: "📐", goal: 20, hours: 1.5 }
+      ],
+      "SSC CGL / CHSL": [
+        { name: "क्वांटिटेटिव एप्टीट्यूड (Maths)", cat: "SSC CGL / CHSL", icon: "📐", goal: 26, hours: 2.5 },
+        { name: "जनरल इंटेलिजेंस व रीजनिंग", cat: "SSC CGL / CHSL", icon: "🧩", goal: 25, hours: 1.5 },
+        { name: "अंग्रेजी भाषा व वोकैबुलरी", cat: "SSC CGL / CHSL", icon: "📖", goal: 26, hours: 2 },
+        { name: "सामान्य अध्ययन (GS / GK)", cat: "SSC CGL / CHSL", icon: "🏛️", goal: 24, hours: 2 },
+        { name: "डेली PYQ स्पीड टेस्ट", cat: "SSC CGL / CHSL", icon: "📝", goal: 26, hours: 1 }
+      ],
+      "IBPS PO / Clerk / SBI": [
+        { name: "डेटा इंटरप्रिटेशन व क्वांट", cat: "Banking / IBPS", icon: "📐", goal: 26, hours: 2.5 },
+        { name: "पजल्स व सीटिंग अरेंजमेंट", cat: "Banking / IBPS", icon: "🧩", goal: 26, hours: 2.5 },
+        { name: "इंग्लिश कॉम्प्रिहेंशन", cat: "Banking / IBPS", icon: "📖", goal: 25, hours: 1.5 },
+        { name: "बैंकिंग अवेयरनेस व सीए", cat: "Banking / IBPS", icon: "📰", goal: 26, hours: 1.5 },
+        { name: "डेली स्पीड मैथ्स व क्विज", cat: "Banking / IBPS", icon: "📝", goal: 26, hours: 1 }
+      ],
+      "Railway NTPC / Group D": [
+        { name: "गणित (Mathematics)", cat: "Railway / RRB", icon: "📐", goal: 25, hours: 2 },
+        { name: "सामान्य बुद्धिमत्ता (Reasoning)", cat: "Railway / RRB", icon: "🧩", goal: 25, hours: 1.5 },
+        { name: "सामान्य विज्ञान (General Science)", cat: "Railway / RRB", icon: "🔬", goal: 26, hours: 2 },
+        { name: "सामान्य जागरूकता (Current & GK)", cat: "Railway / RRB", icon: "📰", goal: 24, hours: 1.5 }
+      ],
+      "NEET UG": [
+        { name: "भौतिक विज्ञान (Physics)", cat: "NEET / JEE", icon: "🔬", goal: 26, hours: 3 },
+        { name: "रसायन विज्ञान (Chemistry)", cat: "NEET / JEE", icon: "🔬", goal: 26, hours: 2.5 },
+        { name: "जीव विज्ञान (Biology - NCERT)", cat: "NEET / JEE", icon: "🔬", goal: 28, hours: 3 }
+      ]
+    };
+
+    let currentLang = 'hi';
+    let isDarkMode = false;
+    let soundEnabled = true;
+    let zenModeActive = false;
+    let activeTab = 'matrix';
+
+    const liveNow = new Date();
+    const currentYear = liveNow.getFullYear();
+    const currentMonth = liveNow.getMonth();
+    let mobileActiveDay = liveNow.getDate();
+
+    let appState = null;
+    let studentName = localStorage.getItem('st_student_name') || 'Aspirant';
+    let targetExamName = localStorage.getItem('st_target_exam_name') || '';
+    let targetExamDate = localStorage.getItem('st_target_exam_date') || '';
+    let targetManifesto = localStorage.getItem('st_target_manifesto') || 'AIR Under 100 / Dream Service';
+    let selectedRecallClarity = 5;
+    let streakShields = parseInt(localStorage.getItem('st_streak_shields') || '2');
+
+    let chartTrend = null;
+    let chartDoughnut = null;
+    let chartRadar = null;
+    let chartWeekly = null;
+    let chartMocks = null;
+
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playHapticPop(frequency = 580, type = 'sine', duration = 0.08) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(frequency * 0.5, ctx.currentTime + duration);
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function showInAppToast(msg, icon = '💡') {
+      const toast = document.getElementById('inAppToast');
+      const msgEl = document.getElementById('toastMsg');
+      const iconEl = document.getElementById('toastIcon');
+      if (!toast || !msgEl) return;
+
+      msgEl.textContent = msg;
+      if (iconEl) iconEl.textContent = icon;
+      toast.classList.remove('translate-y-10', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-10', 'opacity-0');
+      }, 3000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedPrefs();
+      applyAppTheme();
+      startLiveDeviceClock();
+      updateStaticTexts();
+      loadActiveMonthState();
+      renderAllComponents();
+      initializeCharts();
+      refreshMetricsAndCharts();
+      renderMocksSection();
+      populateFocusSubjectOptions();
+      setupGlobalHotkeys();
+      updateStudentNameDisplay();
+
+      if (!targetExamName || !targetExamDate || !localStorage.getItem('st_student_name')) {
+        openExamSetupModal(true);
+      } else {
+        updateExamDisplayInfo();
+        startExamCountdown();
+      }
+    });
+
+    function setupGlobalHotkeys() {
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        if (e.key === ' ' || e.code === 'Space') {
+          e.preventDefault();
+          switchTab('focus');
+          toggleTimerPlay();
+        } else if (e.key === 'n' || e.key === 'N') {
+          e.preventDefault();
+          openSubjectModal();
+        } else if (e.key === 'd' || e.key === 'D') {
+          e.preventDefault();
+          openDailyNotesModal();
+        } else if (e.key === 'z' || e.key === 'Z') {
+          e.preventDefault();
+          toggleZenFocusMode();
+        } else if (e.key === 't' || e.key === 'T') {
+          e.preventDefault();
+          toggleAppTheme();
+        } else if (e.key === '?') {
+          e.preventDefault();
+          openShortcutsModal();
+        }
+      });
+    }
+
+    function openShortcutsModal() { document.getElementById('modalShortcuts').classList.remove('hidden'); }
+    function closeShortcutsModal() { document.getElementById('modalShortcuts').classList.add('hidden'); }
+
+    function loadSavedPrefs() {
+      const savedLang = localStorage.getItem('st_lang');
+      if (savedLang && (savedLang === 'hi' || savedLang === 'en')) currentLang = savedLang;
+
+      const savedTheme = localStorage.getItem('st_theme');
+      isDarkMode = (savedTheme === 'dark');
+
+      const savedSound = localStorage.getItem('st_sound');
+      if (savedSound !== null) soundEnabled = savedSound === 'true';
+
+      const savedStudent = localStorage.getItem('st_student_name');
+      if (savedStudent) studentName = savedStudent;
+    }
+
+    function updateStudentNameDisplay() {
+      const el = document.getElementById('displayHeaderStudentName');
+      if (el) el.textContent = studentName || 'Aspirant';
+    }
+
+    function toggleAppTheme() {
+      isDarkMode = !isDarkMode;
+      localStorage.setItem('st_theme', isDarkMode ? 'dark' : 'light');
+      applyAppTheme();
+      playHapticPop(440, 'triangle', 0.06);
+
+      if (chartTrend) {
+        destroyCharts();
+        initializeCharts();
+        refreshMetricsAndCharts();
+        renderMocksSection();
+      }
+    }
+
+    function applyAppTheme() {
+      const root = document.getElementById('super-tracker-root');
+      const mobileIcon = document.getElementById('mobileThemeIcon');
+      if (isDarkMode) {
+        root.classList.add('dark');
+        if (mobileIcon) mobileIcon.textContent = '☀️';
+      } else {
+        root.classList.remove('dark');
+        if (mobileIcon) mobileIcon.textContent = '🌙';
+      }
+    }
+
+    function toggleAppLanguage() {
+      currentLang = currentLang === 'hi' ? 'en' : 'hi';
+      localStorage.setItem('st_lang', currentLang);
+      playHapticPop(600, 'sine', 0.05);
+
+      updateStaticTexts();
+      applyAppTheme();
+      renderAllComponents();
+      refreshMetricsAndCharts();
+      renderMocksSection();
+      populateFocusSubjectOptions();
+    }
+
+    function toggleSoundFx() {
+      soundEnabled = !soundEnabled;
+      localStorage.setItem('st_sound', soundEnabled);
+      const icon = soundEnabled ? '🔊' : '🔇';
+      document.getElementById('btnMobileSound').textContent = icon;
+      if (soundEnabled) playHapticPop(650, 'sine', 0.08);
+    }
+
+    function updateStaticTexts() {
+      const t = I18N[currentLang];
+      document.getElementById('card1Title').textContent = t.card1;
+      document.getElementById('card2Title').textContent = t.card2;
+      document.getElementById('card2Note').textContent = t.card2Note;
+      document.getElementById('card3Title').textContent = t.card3;
+      document.getElementById('card3Note').textContent = t.card3Note;
+      document.getElementById('mobileSliderTitle').textContent = t.mobileSliderTitle;
+      document.getElementById('mobileLangLabel').textContent = t.langBadge;
+    }
+
+    function switchTab(tabId) {
+      activeTab = tabId;
+      playHapticPop(520, 'sine', 0.05);
+
+      const tabs = ['matrix', 'spacedhub', 'focus', 'mocks', 'feynman', 'warroom', 'analytics'];
+      tabs.forEach(t => {
+        const content = document.getElementById(`tabContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const navBtn = document.getElementById(`navBtn_${t}`);
+        const tabBtn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+
+        if (t === tabId) {
+          if (content) content.classList.remove('hidden');
+          if (navBtn) {
+            navBtn.classList.add('text-sky-500');
+            navBtn.classList.remove('text-[var(--st-text-muted)]');
+          }
+          if (tabBtn) {
+            tabBtn.classList.add('text-sky-500');
+            tabBtn.classList.remove('text-[var(--st-text-muted)]');
+          }
+        } else {
+          if (content) content.classList.add('hidden');
+          if (navBtn) {
+            navBtn.classList.remove('text-sky-500');
+            navBtn.classList.add('text-[var(--st-text-muted)]');
+          }
+          if (tabBtn) {
+            tabBtn.classList.remove('text-sky-500');
+            tabBtn.classList.add('text-[var(--st-text-muted)]');
+          }
+        }
+      });
+
+      if (tabId === 'spacedhub') {
+        populateSpacedHubSubjectFilter();
+        renderSpacedHubTable();
+      } else if (tabId === 'analytics') {
+        setTimeout(() => refreshMetricsAndCharts(), 50);
+      } else if (tabId === 'mocks') {
+        setTimeout(() => renderMocksSection(), 50);
+      } else if (tabId === 'feynman') {
+        populateFeynmanSubjectOptions();
+        renderFeynmanCardsList();
+      } else if (tabId === 'warroom') {
+        renderWarRoomView();
+      }
+    }
+
+    function populateSpacedHubSubjectFilter() {
+      const select = document.getElementById('selectSpacedFilterSubject');
+      if (!select) return;
+      const curVal = select.value || 'all';
+      select.innerHTML = '<option value="all">🌐 सभी विषय (All Subjects)</option>';
+      if (appState.items && appState.items.length > 0) {
+        appState.items.forEach(it => {
+          const opt = document.createElement('option');
+          opt.value = it.id;
+          opt.textContent = `${it.icon || '📖'} ${it.name}`;
+          select.appendChild(opt);
+        });
+      }
+      select.value = curVal;
+    }
+
+    function renderSpacedHubTable() {
+      const mobileContainer = document.getElementById('mobileSpacedCardsList');
+      const filterSelect = document.getElementById('selectSpacedFilterSubject');
+      const selectedSubjectId = filterSelect ? filterSelect.value : 'all';
+
+      const kpiDue = document.getElementById('kpiSpacedDueToday');
+      const kpiUpcoming = document.getElementById('kpiSpacedUpcoming');
+      const kpiDone = document.getElementById('kpiSpacedCompleted');
+      const kpiTotal = document.getElementById('kpiSpacedTotalLogs');
+
+      const allLogs = appState.spacedLogs || [];
+      const todayStr = new Date().toISOString().split('T')[0];
+      const next7Date = new Date();
+      next7Date.setDate(next7Date.getDate() + 7);
+      const next7Str = next7Date.toISOString().split('T')[0];
+
+      let dueCount = 0;
+      let upcomingCount = 0;
+      let completedRevs = 0;
+
+      allLogs.forEach(l => {
+        completedRevs++;
+        if (l.rev7Done) completedRevs++;
+        else if (l.rev7Date <= todayStr) dueCount++;
+        else if (l.rev7Date <= next7Str) upcomingCount++;
+
+        if (l.rev30Done) completedRevs++;
+        else if (l.rev7Done && l.rev30Date <= todayStr) dueCount++;
+        else if (l.rev7Done && l.rev30Date <= next7Str) upcomingCount++;
+      });
+
+      if (kpiDue) kpiDue.textContent = dueCount;
+      if (kpiUpcoming) kpiUpcoming.textContent = upcomingCount;
+      if (kpiDone) kpiDone.textContent = completedRevs;
+      if (kpiTotal) kpiTotal.textContent = allLogs.length;
+
+      const filteredLogs = selectedSubjectId === 'all' 
+        ? allLogs 
+        : allLogs.filter(l => String(l.itemId) === String(selectedSubjectId));
+
+      if (!mobileContainer) return;
+
+      if (filteredLogs.length === 0) {
+        mobileContainer.innerHTML = `
+          <div class="p-8 text-center text-xs text-[var(--st-text-muted)] st-glass rounded-2xl space-y-2">
+            <span class="text-3xl block">📖</span>
+            <p class="font-bold text-sm text-[var(--st-text-head)]">कोई 1-7-30 अध्ययन रिकॉर्ड मौजूद नहीं है।</p>
+            <p>जब आप 'दैनिक अध्ययन मैट्रिक्स' में आज की तारीख में टिक करेंगे, तो टॉपिक और पेज नंबर यहाँ स्वतः ट्रैक होंगे।</p>
+          </div>
+        `;
+        return;
+      }
+
+      mobileContainer.innerHTML = filteredLogs.map(l => {
+        const isRev7Due = !l.rev7Done && l.rev7Date <= todayStr;
+        const isRev30Due = l.rev7Done && !l.rev30Done && l.rev30Date <= todayStr;
+
+        return `
+          <div class="st-glass p-3.5 rounded-2xl space-y-2.5 border border-[var(--st-border)]">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-sky-500 flex items-center gap-1.5">
+                <span>${l.subjectIcon || '📖'}</span> <span>${l.subjectName}</span>
+              </span>
+              <button onclick="deleteSingleSpacedLog('${l.id}')" class="text-rose-500 text-xs">🗑️</button>
+            </div>
+            <div>
+              <h5 class="text-xs font-black text-[var(--st-text-head)]">${l.topic}</h5>
+              <div class="flex items-center gap-2 mt-1 text-[11px] text-[var(--st-text-muted)] font-mono">
+                <span class="font-bold text-sky-500">📄 ${l.pageRange}</span>
+                <span>•</span>
+                <span>${l.totalPages} Pages</span>
+                <span>•</span>
+                <span>मूल: ${l.studiedDate}</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[var(--st-border)] text-center text-[10px] font-mono">
+              <div class="p-2 rounded-xl st-subtle">
+                <span class="text-[9px] text-[var(--st-text-muted)] block uppercase">Stage 2 (+7d)</span>
+                ${l.rev7Done ? '<span class="text-emerald-500 font-bold">✓ पूर्ण</span>' : (isRev7Due ? `<button onclick="markSpacedRevisionCompleted('${l.id}', 7)" class="px-2 py-1 mt-1 rounded-lg bg-rose-500 text-white font-bold animate-pulse">🚨 Revise</button>` : `<span class="text-amber-500 font-bold">${l.rev7Date}</span>`)}
+              </div>
+              <div class="p-2 rounded-xl st-subtle">
+                <span class="text-[9px] text-[var(--st-text-muted)] block uppercase">Stage 3 (+30d)</span>
+                ${l.rev30Done ? '<span class="text-emerald-500 font-bold">✓ पूर्ण</span>' : (isRev30Due ? `<button onclick="markSpacedRevisionCompleted('${l.id}', 30)" class="px-2 py-1 mt-1 rounded-lg bg-emerald-600 text-white font-bold animate-pulse">🎯 Master</button>` : `<span class="text-[var(--st-text-muted)]">${l.rev7Done ? l.rev30Date : '🔒 Locked'}</span>`)}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteSingleSpacedLog(logId) {
+      if (!appState.spacedLogs) return;
+      appState.spacedLogs = appState.spacedLogs.filter(l => l.id !== logId);
+      persistAppState();
+      renderSpacedHubTable();
+      renderSpacedRepetitionSuperAlert();
+      playHapticPop(350, 'sine', 0.05);
+      showInAppToast(currentLang === 'hi' ? '1-7-30 रिकॉर्ड हटा दिया गया।' : 'Log removed.', '🗑️');
+    }
+
+    function getStorageKey() {
+      return `super_trackkar_study_${currentYear}_${currentMonth}`;
+    }
+
+    function loadActiveMonthState() {
+      const key = getStorageKey();
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        try { appState = JSON.parse(raw); } catch (e) { appState = null; }
+      }
+
+      if (!appState || !Array.isArray(appState.items)) {
+        appState = {
+          items: [],
+          checks: {},
+          dailyNotes: {},
+          dailyPyq: {},
+          dailyPyqDetail: {},
+          dailyEnergy: {},
+          dailySleep: {},
+          distractions: {},
+          mocks: [],
+          microTopics: {},
+          subjectSources: {},
+          feynmanCards: [],
+          hourlyDensity: {},
+          spacedLogs: []
+        };
+        persistAppState();
+      } else {
+        if (!appState.dailyNotes) appState.dailyNotes = {};
+        if (!appState.dailyPyq) appState.dailyPyq = {};
+        if (!appState.dailyPyqDetail) appState.dailyPyqDetail = {};
+        if (!appState.dailyEnergy) appState.dailyEnergy = {};
+        if (!appState.dailySleep) appState.dailySleep = {};
+        if (!appState.distractions) appState.distractions = {};
+        if (!appState.mocks) appState.mocks = [];
+        if (!appState.microTopics) appState.microTopics = {};
+        if (!appState.subjectSources) appState.subjectSources = {};
+        if (!appState.feynmanCards) appState.feynmanCards = [];
+        if (!appState.hourlyDensity) appState.hourlyDensity = {};
+        if (!appState.spacedLogs) appState.spacedLogs = [];
+      }
+      updateEnergyButtonsDisplay();
+      updateDistractionDisplay();
+      updateDetailedPyqDisplay();
+      updateSleepDisplay();
+      renderRevisionQueueBanner();
+      renderSpacedRepetitionSuperAlert();
+      renderFeynmanCardsList();
+      renderHourlyDensityGrid();
+      updateManifestoDisplay();
+    }
+
+    function persistAppState() {
+      localStorage.setItem(getStorageKey(), JSON.stringify(appState));
+    }
+
+    // ================= 1-7-30 SPACED REPETITION ENGINE =================
+    let pendingLogState = null;
+
+    function toggleCheck(itemId, day, checked) {
+      if (checked) {
+        openTopicStudyLogModal(itemId, day);
+      } else {
+        if (!appState.checks[itemId]) appState.checks[itemId] = {};
+        appState.checks[itemId][day] = false;
+        persistAppState();
+        renderAllComponents();
+        refreshMetricsAndCharts();
+        playHapticPop(380, 'sine', 0.05);
+      }
+    }
+
+    function openTopicStudyLogModal(itemId, day) {
+      pendingLogState = { itemId, day };
+      const item = appState.items.find(x => String(x.id) === String(itemId));
+      if (!item) return;
+
+      document.getElementById('logModalSubjectHeader').textContent = `${item.icon || '📌'} ${item.name} (${item.cat || 'General'}) • Day ${day}`;
+      document.getElementById('inputLogTopicName').value = '';
+      document.getElementById('inputLogPageRange').value = '';
+      document.getElementById('inputLogTotalPages').value = '';
+      document.getElementById('inputLogKeyNotes').value = '';
+
+      document.getElementById('modalTopicStudyLog').classList.remove('hidden');
+      setTimeout(() => document.getElementById('inputLogTopicName').focus(), 100);
+    }
+
+    function cancelTopicStudyLog() {
+      document.getElementById('modalTopicStudyLog').classList.add('hidden');
+      pendingLogState = null;
+      renderAllComponents();
+    }
+
+    function confirmTopicStudyLog() {
+      if (!pendingLogState) return;
+
+      const topicInput = document.getElementById('inputLogTopicName');
+      const pageInput = document.getElementById('inputLogPageRange');
+      const totalPagesInput = document.getElementById('inputLogTotalPages');
+      const notesInput = document.getElementById('inputLogKeyNotes');
+
+      const topicName = topicInput.value.trim();
+      const pageRange = pageInput.value.trim();
+      const totalPages = totalPagesInput.value.trim();
+      const keyNotes = notesInput.value.trim();
+
+      if (!topicName || !pageRange) {
+        showInAppToast(currentLang === 'hi' ? 'टॉपिक और पेज नंबर अनिवार्य हैं!' : 'Topic and page range required!', '⚠️');
+        return;
+      }
+
+      const { itemId, day } = pendingLogState;
+      const item = appState.items.find(x => String(x.id) === String(itemId));
+
+      if (!appState.checks[itemId]) appState.checks[itemId] = {};
+      appState.checks[itemId][day] = true;
+
+      const baseDate = new Date();
+      function getOffsetDateString(offsetDays) {
+        const d = new Date(baseDate);
+        d.setDate(d.getDate() + offsetDays);
+        return d.toISOString().split('T')[0];
+      }
+
+      const newLog = {
+        id: 'spaced_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        itemId: itemId,
+        subjectName: item ? item.name : 'Subject',
+        subjectIcon: item ? (item.icon || '📖') : '📖',
+        topic: topicName,
+        pageRange: pageRange,
+        totalPages: totalPages || '1',
+        keyNotes: keyNotes,
+        studiedDate: baseDate.toISOString().split('T')[0],
+        dayLogged: day,
+        rev1Date: baseDate.toISOString().split('T')[0],
+        rev1Done: true,
+        rev7Date: getOffsetDateString(7),
+        rev7Done: false,
+        rev30Date: getOffsetDateString(30),
+        rev30Done: false
+      };
+
+      if (!appState.spacedLogs) appState.spacedLogs = [];
+      appState.spacedLogs.unshift(newLog);
+
+      persistAppState();
+      document.getElementById('modalTopicStudyLog').classList.add('hidden');
+      pendingLogState = null;
+
+      renderAllComponents();
+      refreshMetricsAndCharts();
+      renderSpacedRepetitionSuperAlert();
+      if (activeTab === 'spacedhub') renderSpacedHubTable();
+
+      playHapticPop(680, 'sine', 0.15);
+      showInAppToast(currentLang === 'hi' ? `✅ आज का अध्ययन दर्ज! अगला रिवीजन 7वें दिन (${newLog.rev7Date}) अनलॉक होगा।` : `✅ Studied today! Next revision in 7 days (${newLog.rev7Date}).`, '🎯');
+      checkDailyCompletionConfetti(day);
+    }
+
+    function markSpacedRevisionCompleted(logId, revStage) {
+      if (!appState.spacedLogs) return;
+      const target = appState.spacedLogs.find(x => x.id === logId);
+      if (!target) return;
+
+      const todayStr = new Date().toISOString().split('T')[0];
+      if (revStage === 7) {
+        if (target.rev7Date > todayStr) {
+          showInAppToast(currentLang === 'hi' ? `🔒 7-Day रिवीजन ${target.rev7Date} को ही अनलॉक होगा!` : `🔒 Unlocks on ${target.rev7Date}!`, '⏳');
+          return;
+        }
+        target.rev7Done = true;
+      } else if (revStage === 30) {
+        if (!target.rev7Done) {
+          showInAppToast(currentLang === 'hi' ? '🔒 पहले 7-Day रिवीजन पूर्ण करें!' : '🔒 Complete 7-Day revision first!', '⚠️');
+          return;
+        }
+        if (target.rev30Date > todayStr) {
+          showInAppToast(currentLang === 'hi' ? `🔒 30-Day रिवीजन ${target.rev30Date} को ही अनलॉक होगा!` : `🔒 Unlocks on ${target.rev30Date}!`, '⏳');
+          return;
+        }
+        target.rev30Done = true;
+      }
+
+      persistAppState();
+      renderSpacedRepetitionSuperAlert();
+      renderRevisionQueueBanner();
+      if (activeTab === 'spacedhub') renderSpacedHubTable();
+      playHapticPop(780, 'sine', 0.18);
+
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 60, spread: 60, origin: { y: 0.5 } });
+      }
+      showInAppToast(currentLang === 'hi' ? `🎉 ${revStage}-डे रिवीजन पूर्ण!` : `🎉 ${revStage}-Day Revision done!`, '🏆');
+    }
+
+    function renderSpacedRepetitionSuperAlert() {
+      const container = document.getElementById('spacedRepetitionSuperAlert');
+      const cardsGrid = document.getElementById('spacedRepetitionCardsList');
+      const badgeCount = document.getElementById('badgeRevisionDueCount');
+      if (!container || !cardsGrid) return;
+
+      const todayStr = new Date().toISOString().split('T')[0];
+      const logs = appState.spacedLogs || [];
+
+      let dueList = [];
+      logs.forEach(log => {
+        if (!log.rev7Done && log.rev7Date <= todayStr) {
+          dueList.push({ log: log, stage: 7, label: "7-दिन रिवीजन (+7d Due)" });
+        } else if (log.rev7Done && !log.rev30Done && log.rev30Date <= todayStr) {
+          dueList.push({ log: log, stage: 30, label: "30-दिन रिवीजन (+30d Due)" });
+        }
+      });
+
+      if (badgeCount) badgeCount.textContent = `${dueList.length} Due`;
+
+      if (dueList.length > 0) {
+        container.classList.remove('hidden');
+        cardsGrid.innerHTML = dueList.map(item => {
+          const l = item.log;
+          return `
+            <div class="st-glass p-3 rounded-2xl flex items-center justify-between gap-2.5">
+              <div class="truncate flex-1">
+                <span class="text-[9px] font-black uppercase text-rose-500 block">${item.label}</span>
+                <h4 class="text-xs font-black text-[var(--st-text-head)] truncate">${l.topic}</h4>
+                <span class="text-[10px] text-sky-500 font-mono">📄 ${l.pageRange} • ${l.subjectName}</span>
+              </div>
+              <button onclick="markSpacedRevisionCompleted('${l.id}', ${item.stage})" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-black text-[11px] shadow-sm flex-shrink-0">
+                ✓ Done
+              </button>
+            </div>
+          `;
+        }).join('');
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
+    function updateManifestoDisplay() {
+      const el = document.getElementById('lblManifestoPost');
+      if (el) el.textContent = `Target: ${targetManifesto || 'Dream Goal'}`;
+    }
+
+    function setRecallClarity(score) {
+      selectedRecallClarity = score;
+      const pills = document.getElementById('clarityScorePills').children;
+      for (let i = 0; i < pills.length; i++) {
+        if (i + 1 === score) {
+          pills[i].className = "w-6 h-6 rounded bg-emerald-500 text-white font-black shadow-md scale-110";
+        } else {
+          pills[i].className = "w-6 h-6 rounded st-subtle text-[var(--st-text-muted)]";
+        }
+      }
+      playHapticPop(450 + (score * 50), 'sine', 0.05);
+    }
+
+    function saveFeynmanRecallEntry() {
+      const subSelect = document.getElementById('selectFeynmanSubject');
+      const topicInput = document.getElementById('inputFeynmanTopic');
+      const explInput = document.getElementById('inputFeynmanExplanation');
+
+      const subjectName = subSelect.options[subSelect.selectedIndex]?.text || 'General';
+      const topic = topicInput.value.trim();
+      const explanation = explInput.value.trim();
+
+      if (!topic || !explanation) {
+        showInAppToast(currentLang === 'hi' ? 'कृपया टॉपिक और व्याख्या दोनों लिखें।' : 'Please enter topic and explanation.');
+        return;
+      }
+
+      if (!appState.feynmanCards) appState.feynmanCards = [];
+      appState.feynmanCards.unshift({
+        id: 'feynman_' + Date.now(),
+        date: new Date().toISOString().split('T')[0],
+        subject: subjectName,
+        topic: topic,
+        explanation: explanation,
+        clarity: selectedRecallClarity
+      });
+
+      persistAppState();
+      renderFeynmanCardsList();
+      topicInput.value = '';
+      explInput.value = '';
+      playHapticPop(750, 'sine', 0.15);
+      showInAppToast(currentLang === 'hi' ? '💡 रिकॉल कार्ड सुरक्षित हुआ!' : '💡 Recall card saved!');
+    }
+
+    function deleteFeynmanCard(id) {
+      if (!appState.feynmanCards) return;
+      appState.feynmanCards = appState.feynmanCards.filter(c => c.id !== id);
+      persistAppState();
+      renderFeynmanCardsList();
+    }
+
+    function clearAllFeynmanCards() {
+      appState.feynmanCards = [];
+      persistAppState();
+      renderFeynmanCardsList();
+    }
+
+    function renderFeynmanCardsList() {
+      const container = document.getElementById('feynmanCardsContainer');
+      const countLabel = document.getElementById('feynmanCardCount');
+      if (!container) return;
+
+      const cards = appState.feynmanCards || [];
+      if (countLabel) countLabel.textContent = `${cards.length} Cards`;
+
+      if (cards.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-xs text-[var(--st-text-muted)] st-subtle rounded-2xl">कोई कार्ड नहीं। कठिन टॉपिक्स को यहाँ सरल शब्दों में लिखें।</div>`;
+        return;
+      }
+
+      container.innerHTML = cards.map(c => `
+        <div class="p-3 rounded-2xl st-subtle space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] uppercase font-bold text-sky-500">${c.subject}</span>
+            <div class="flex items-center gap-1">
+              <span class="text-[10px] text-amber-500">${'★'.repeat(c.clarity || 5)}</span>
+              <button onclick="deleteFeynmanCard('${c.id}')" class="text-rose-500 text-xs ml-1">✕</button>
+            </div>
+          </div>
+          <h5 class="text-xs font-black text-[var(--st-text-head)]">${c.topic}</h5>
+          <p class="text-xs text-[var(--st-text-muted)] italic bg-black/5 dark:bg-white/5 p-2 rounded-xl">"${c.explanation}"</p>
+          <span class="text-[9px] text-[var(--st-text-muted)] font-mono block text-right">${c.date}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderHourlyDensityGrid() {
+      const container = document.getElementById('hourlyDensityGrid');
+      if (!container) return;
+      let html = '';
+      for (let h = 0; h < 24; h++) {
+        const label = `${String(h).padStart(2, '0')}:00`;
+        let bg = 'bg-slate-200 dark:bg-slate-800 text-slate-500';
+        if (h >= 6 && h <= 10) bg = 'bg-emerald-500/20 text-emerald-500 border border-emerald-500/30';
+        else if (h >= 18 && h <= 21) bg = 'bg-sky-500/20 text-sky-500 border border-sky-500/30';
+        html += `<div class="p-1.5 rounded-lg ${bg}">${label}</div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function populateFeynmanSubjectOptions() {
+      const select = document.getElementById('selectFeynmanSubject');
+      if (!select) return;
+      select.innerHTML = '';
+      if (!appState.items || appState.items.length === 0) {
+        select.innerHTML = '<option value="">सामान्य अध्ययन (General)</option>';
+        return;
+      }
+      appState.items.forEach(it => {
+        const opt = document.createElement('option');
+        opt.value = it.id;
+        opt.textContent = `${it.icon || '📖'} ${it.name}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+
+    function checkSpacedRepetitionDue(checks, realToday) {
+      for (let prevDay of [realToday - 1, realToday - 7, realToday - 30]) {
+        if (prevDay >= 1 && checks[prevDay] && !checks[realToday]) return true;
+      }
+      return false;
+    }
+
+    function renderRevisionQueueBanner() {
+      const wrapper = document.getElementById('wrapperRevisionQueue');
+      const badgesContainer = document.getElementById('revisionQueueBadges');
+      if (!wrapper || !badgesContainer) return;
+
+      const realToday = new Date().getDate();
+      let dueList = [];
+
+      if (appState.items) {
+        appState.items.forEach(it => {
+          const checks = appState.checks[it.id] || {};
+          if (checkSpacedRepetitionDue(checks, realToday)) {
+            dueList.push(it);
+          }
+        });
+      }
+
+      if (dueList.length > 0) {
+        wrapper.classList.remove('hidden');
+        badgesContainer.innerHTML = dueList.map(it => `
+          <span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold text-[10px] border border-amber-500/30">
+            ${it.icon || '📌'} ${it.name}
+          </span>
+        `).join('');
+      } else {
+        wrapper.classList.add('hidden');
+      }
+    }
+
+    function renderAllComponents() {
+      renderMobileDaysCarousel();
+      renderMobileCards();
+      renderActivityHeatmap();
+      renderRevisionQueueBanner();
+      renderSpacedRepetitionSuperAlert();
+      updateStudentNameDisplay();
+    }
+
+    function renderMobileDaysCarousel() {
+      const totalDays = daysInMonth(currentYear, currentMonth);
+      const realToday = new Date().getDate();
+      mobileActiveDay = realToday;
+
+      const container = document.getElementById('mobileDaysContainer');
+      if (!container) return;
+      let html = '';
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dObj = new Date(currentYear, currentMonth, day);
+        const dayStr = WEEK_DAYS[currentLang][dObj.getDay()];
+        const isToday = day === realToday;
+
+        html += `
+          <div class="flex-shrink-0 flex flex-col items-center justify-center w-11 py-2 px-1 rounded-2xl text-center select-none ${
+              isToday 
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/40 ring-2 ring-sky-300 scale-105' 
+                : 'st-subtle text-[var(--st-text-muted)] opacity-40'
+            }">
+            <span class="text-[8px] uppercase font-bold">${dayStr}</span>
+            <span class="text-xs font-black font-mono">${day}</span>
+            <span class="text-[7px] mt-0.5">${isToday ? 'LIVE' : '🔒'}</span>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function renderMobileCards() {
+      const container = document.getElementById('mobileCardsContainer');
+      if (!container) return;
+      const totalDays = daysInMonth(currentYear, currentMonth);
+
+      if (!appState.items || appState.items.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center text-[var(--st-text-muted)] st-glass rounded-2xl border border-dashed border-[var(--st-border)] space-y-2">
+            <span class="text-3xl block">📚</span>
+            <p class="font-bold text-xs text-[var(--st-text-head)]">कोई परीक्षा सिलेबस नहीं जोड़ा गया</p>
+            <p class="text-[11px]">ऊपर <b>+</b> बटन पर टैप करके अध्ययन योजना बनाएं।</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = appState.items.map(item => {
+        const checks = appState.checks[item.id] || {};
+        const isChecked = !!checks[mobileActiveDay];
+
+        let doneCount = 0;
+        for (let d = 1; d <= totalDays; d++) {
+          if (checks[d]) doneCount++;
+        }
+        const goal = item.goal || 25;
+        const pct = Math.min(100, Math.round((doneCount / goal) * 100));
+        const chaps = (appState.microTopics && appState.microTopics[item.id]) || [];
+
+        return `
+          <div class="st-glass p-3 rounded-2xl flex flex-col gap-2 shadow-sm border border-[var(--st-border)] active:scale-[0.99] transition-transform">
+            <div class="flex items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2.5 truncate flex-1">
+                <span class="text-2xl">${item.icon || '📌'}</span>
+                <div class="truncate">
+                  <h4 class="font-bold text-xs text-[var(--st-text-head)] truncate">${item.name}</h4>
+                  <div class="flex items-center gap-1.5 mt-0.5 text-[10px] text-[var(--st-text-muted)]">
+                    <span class="text-sky-500 font-bold">${item.cat || 'General'}</span>
+                    <span>•</span>
+                    <span class="font-mono">${doneCount}/${goal}d</span>
+                    <span>•</span>
+                    <span class="font-black ${pct >= 80 ? 'text-emerald-500' : 'text-sky-500'}">${pct}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <input type="checkbox" 
+                class="st-checkbox flex-shrink-0" 
+                ${isChecked ? 'checked' : ''} 
+                onchange="toggleCheck('${item.id}', ${mobileActiveDay}, this.checked)"
+              />
+            </div>
+
+            <div class="flex items-center justify-between pt-1.5 border-t border-[var(--st-border)] text-[10px] text-[var(--st-text-muted)] font-mono">
+              <span class="text-indigo-500 font-semibold">⏱️ ${item.hours || 1} hrs/day</span>
+              <button onclick="openTopicModal('${item.id}')" class="px-2 py-0.5 rounded-md st-subtle text-sky-500 font-bold">
+                📖 ${chaps.length} Chapters
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openSubjectModal() {
+      const modal = document.getElementById('modalAddSubject');
+      const nameInput = document.getElementById('inputSubjectName');
+      if (nameInput) nameInput.value = '';
+      modal.classList.remove('hidden');
+      playHapticPop(520, 'sine', 0.05);
+      setTimeout(() => { if (nameInput) nameInput.focus(); }, 100);
+    }
+
+    function closeSubjectModal() { document.getElementById('modalAddSubject').classList.add('hidden'); }
+
+    function submitNewSubject() {
+      const name = document.getElementById('inputSubjectName').value.trim();
+      const cat = document.getElementById('inputSubjectCat').value;
+      const icon = document.getElementById('inputSubjectIcon').value;
+      const goal = parseInt(document.getElementById('inputSubjectDaysGoal').value) || 25;
+      const hours = parseFloat(document.getElementById('inputSubjectHours').value) || 2;
+
+      if (!name) {
+        showInAppToast(currentLang === 'hi' ? 'कृपया विषय का नाम दर्ज करें!' : 'Please enter subject name!', '⚠️');
+        return;
+      }
+
+      const newItem = {
+        id: 'study_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+        name, cat, icon, goal, hours
+      };
+
+      appState.items.push(newItem);
+      appState.checks[newItem.id] = {};
+      persistAppState();
+      closeSubjectModal();
+      renderAllComponents();
+      refreshMetricsAndCharts();
+      populateFocusSubjectOptions();
+      playHapticPop(720, 'sine', 0.15);
+      showInAppToast(`✅ "${name}" जोड़ा गया!`, '🎯');
+    }
+
+    function openManageDrawer() {
+      renderManageDrawerList();
+      document.getElementById('modalManageDrawer').classList.remove('hidden');
+      playHapticPop(480, 'sine', 0.05);
+    }
+
+    function closeManageDrawer() { document.getElementById('modalManageDrawer').classList.add('hidden'); }
+
+    function renderManageDrawerList() {
+      const container = document.getElementById('manageItemsListContainer');
+      if (!container) return;
+      if (!appState.items || appState.items.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-[var(--st-text-muted)] text-xs">सूची खाली है।</div>`;
+        return;
+      }
+
+      container.innerHTML = appState.items.map(it => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl st-subtle border border-[var(--st-border)]">
+          <div class="flex items-center gap-2 truncate">
+            <span class="text-lg">${it.icon || '📌'}</span>
+            <div class="truncate">
+              <span class="font-bold text-xs text-[var(--st-text-head)] block truncate">${it.name}</span>
+              <span class="text-[9px] text-sky-500 font-bold">${it.cat || 'General'} • Target: ${it.goal}d</span>
+            </div>
+          </div>
+          <button onclick="deleteSingleSubject('${it.id}')" class="px-2 py-1 rounded bg-rose-500/10 text-rose-500 text-[10px] font-bold">
+            हटाएं 🗑️
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function deleteSingleSubject(id) {
+      appState.items = appState.items.filter(it => String(it.id) !== String(id));
+      if (appState.checks && appState.checks[id]) delete appState.checks[id];
+      persistAppState();
+      renderAllComponents();
+      refreshMetricsAndCharts();
+      renderManageDrawerList();
+      populateFocusSubjectOptions();
+      playHapticPop(350, 'sine', 0.08);
+      showInAppToast('विषय हटा दिया गया।', '🗑️');
+    }
+
+    function deleteAllCustomItemsPrompt() {
+      if (confirm('क्या आप सचमुच सभी विषय हटाना चाहते हैं?')) {
+        appState.items = [];
+        appState.checks = {};
+        persistAppState();
+        renderAllComponents();
+        refreshMetricsAndCharts();
+        renderManageDrawerList();
+        populateFocusSubjectOptions();
+        playHapticPop(300, 'sine', 0.1);
+        showInAppToast('सभी विषय हटा दिए गए।', '🗑️');
+      }
+    }
+
+    function openDailyNotesModal() {
+      const realToday = new Date().getDate();
+      const monthName = MONTH_NAMES[currentLang][currentMonth];
+      document.getElementById('notesDateHeader').textContent = `${realToday} ${monthName} ${currentYear}`;
+      document.getElementById('inputDayNotesText').value = (appState.dailyNotes && appState.dailyNotes[realToday]) || '';
+      document.getElementById('modalDailyNotes').classList.remove('hidden');
+      setTimeout(() => document.getElementById('inputDayNotesText').focus(), 100);
+      playHapticPop(500, 'sine', 0.05);
+    }
+
+    function closeDailyNotesModal() { document.getElementById('modalDailyNotes').classList.add('hidden'); }
+
+    function saveDailyNotes() {
+      const realToday = new Date().getDate();
+      const txt = document.getElementById('inputDayNotesText').value.trim();
+      if (!appState.dailyNotes) appState.dailyNotes = {};
+      appState.dailyNotes[realToday] = txt;
+      persistAppState();
+      closeDailyNotesModal();
+      playHapticPop(650, 'sine', 0.08);
+      showInAppToast('📓 दैनिक नोट्स सुरक्षित हुए!');
+    }
+
+    function setDailyEnergy(level) {
+      const realToday = new Date().getDate();
+      if (!appState.dailyEnergy) appState.dailyEnergy = {};
+      appState.dailyEnergy[realToday] = level;
+      persistAppState();
+      updateEnergyButtonsDisplay();
+      refreshMetricsAndCharts();
+      playHapticPop(550, 'sine', 0.05);
+    }
+
+    function updateEnergyButtonsDisplay() {
+      const realToday = new Date().getDate();
+      const cur = (appState.dailyEnergy && appState.dailyEnergy[realToday]) || 'high';
+
+      ['High', 'Med', 'Low'].forEach(l => {
+        const btn = document.getElementById(`btnEnergy${l}`);
+        if (!btn) return;
+        if (l.toLowerCase() === cur) {
+          btn.classList.add('bg-sky-500/20', 'border-sky-500', 'text-sky-600', 'font-black');
+        } else {
+          btn.classList.remove('bg-sky-500/20', 'border-sky-500', 'text-sky-600', 'font-black');
+        }
+      });
+    }
+
+    function toggleDistractionFlag(idx) {
+      const realToday = new Date().getDate();
+      if (!appState.distractions) appState.distractions = {};
+      if (!appState.distractions[realToday]) appState.distractions[realToday] = {};
+      const cb = document.getElementById(`distract${idx}`);
+      appState.distractions[realToday][idx] = cb ? cb.checked : false;
+      persistAppState();
+      playHapticPop(cb && cb.checked ? 600 : 400, 'sine', 0.05);
+    }
+
+    function updateDistractionDisplay() {
+      const realToday = new Date().getDate();
+      const saved = (appState.distractions && appState.distractions[realToday]) || {};
+      for (let i = 0; i < 4; i++) {
+        const cb = document.getElementById(`distract${i}`);
+        if (cb) cb.checked = !!saved[i];
+      }
+    }
+
+    function editAspirantManifesto() {
+      const cur = targetManifesto || 'AIR Under 100 / Dream Service';
+      const newPost = window.prompt('अपना ड्रीम लक्ष्य / पोस्ट दर्ज करें:', cur);
+      if (newPost !== null && newPost.trim() !== '') {
+        targetManifesto = newPost.trim();
+        localStorage.setItem('st_target_manifesto', targetManifesto);
+        updateManifestoDisplay();
+        playHapticPop(650, 'sine', 0.08);
+      }
+    }
+
+    // ================= POMODORO ENGINE =================
+    let timerTotalMs = 25 * 60 * 1000;
+    let timerMsLeft = 25 * 60 * 1000;
+    let timerInterval = null;
+    let timerRunning = false;
+    let timerMode = 'pomodoro';
+    let stopwatchMs = 0;
+    let lastTickTime = 0;
+    let completedPomodorosToday = parseInt(localStorage.getItem('st_pomos_today') || '0');
+    let totalFocusSecondsToday = parseInt(localStorage.getItem('st_focus_sec_today') || '0');
+    let ambientGainNode = null;
+    let currentAmbientVolume = 0.2;
+
+    function setQuickFocusTag(tag) {
+      const input = document.getElementById('inputFocusGoal');
+      if (input) { input.value = tag; playHapticPop(540, 'sine', 0.05); }
+    }
+
+    function applyCustomHmsInput() {
+      const m = parseInt(document.getElementById('inputCustomMinutes').value) || 0;
+      const s = parseInt(document.getElementById('inputCustomSeconds').value) || 0;
+      const totalMs = (m * 60 + s) * 1000;
+      if (totalMs <= 0) {
+        showInAppToast('कम से कम 1 सेकंड सेट करें।', '⚠️');
+        return;
+      }
+      if (timerRunning) toggleTimerPlay();
+      timerMode = 'custom';
+      timerTotalMs = totalMs;
+      timerMsLeft = totalMs;
+      updateTimerDisplay();
+      document.getElementById('timerSubjectTag').textContent = `कस्टम (${m}m ${s}s)`;
+      playHapticPop(600, 'sine', 0.06);
+    }
+
+    function renderPomodoroOrbs() {
+      const metricPomos = document.getElementById('metricCompletedPomos');
+      const metricFocusTime = document.getElementById('metricFocusDeskTime');
+      if (metricPomos) metricPomos.textContent = completedPomodorosToday;
+      const totalMinutes = Math.round(totalFocusSecondsToday / 60);
+      if (metricFocusTime) metricFocusTime.textContent = `${totalMinutes}m`;
+    }
+
+    function setTimerPreset(minutes, mode) {
+      if (timerRunning) toggleTimerPlay();
+      timerMode = mode;
+      timerTotalMs = minutes * 60 * 1000;
+      timerMsLeft = timerTotalMs;
+      document.getElementById('inputCustomMinutes').value = minutes;
+      document.getElementById('inputCustomSeconds').value = 0;
+      updateTimerDisplay();
+
+      const tag = document.getElementById('timerSubjectTag');
+      if (tag) tag.textContent = `${minutes}m Focus Session`;
+
+      ['Pomo', 'Ultradian', 'Marathon', 'Short', 'Long', 'Stopwatch'].forEach(m => {
+        const btn = document.getElementById(`btn${m}Mode`);
+        if (!btn) return;
+        if (m.toLowerCase().includes(mode.toLowerCase())) {
+          btn.className = "flex-1 py-1.5 rounded-xl bg-sky-500 text-white font-black whitespace-nowrap px-2";
+        } else {
+          btn.className = "flex-1 py-1.5 rounded-xl text-[var(--st-text-muted)] whitespace-nowrap px-2";
+        }
+      });
+      playHapticPop(480, 'sine', 0.05);
+    }
+
+    function setStopwatchMode() {
+      if (timerRunning) toggleTimerPlay();
+      timerMode = 'stopwatch';
+      stopwatchMs = 0;
+      updateTimerDisplay();
+      document.getElementById('timerSubjectTag').textContent = 'मुक्त स्टॉपवॉच';
+      playHapticPop(480, 'sine', 0.05);
+    }
+
+    function toggleTimerPlay() {
+      timerRunning = !timerRunning;
+      const icon = document.getElementById('timerPlayIcon');
+      const txt = document.getElementById('timerPlayText');
+
+      if (timerRunning) {
+        if (icon) icon.textContent = '⏸';
+        if (txt) txt.textContent = 'रोकें (Pause)';
+        playHapticPop(600, 'sine', 0.08);
+
+        lastTickTime = performance.now();
+        let secondAccumulator = 0;
+
+        timerInterval = setInterval(() => {
+          const now = performance.now();
+          const delta = now - lastTickTime;
+          lastTickTime = now;
+
+          secondAccumulator += delta;
+          if (secondAccumulator >= 1000) {
+            const passedSecs = Math.floor(secondAccumulator / 1000);
+            totalFocusSecondsToday += passedSecs;
+            secondAccumulator %= 1000;
+            localStorage.setItem('st_focus_sec_today', totalFocusSecondsToday);
+            renderPomodoroOrbs();
+          }
+
+          if (timerMode === 'stopwatch') {
+            stopwatchMs += delta;
+            updateTimerDisplay();
+          } else {
+            if (timerMsLeft > delta) {
+              timerMsLeft -= delta;
+              updateTimerDisplay();
+            } else {
+              timerMsLeft = 0;
+              clearInterval(timerInterval);
+              timerRunning = false;
+              if (icon) icon.textContent = '▶';
+              if (txt) txt.textContent = 'सत्र शुरू करें';
+              completedPomodorosToday++;
+              localStorage.setItem('st_pomos_today', completedPomodorosToday);
+              renderPomodoroOrbs();
+              updateTimerDisplay();
+              playHapticPop(850, 'sine', 0.35);
+              if (typeof confetti === 'function') confetti({ particleCount: 75, spread: 70 });
+              showInAppToast('🎯 शानदार! सत्र पूरा हुआ!', '🏆');
+            }
+          }
+        }, 30);
+      } else {
+        clearInterval(timerInterval);
+        if (icon) icon.textContent = '▶';
+        if (txt) txt.textContent = 'जारी रखें';
+        playHapticPop(420, 'sine', 0.06);
+        updateTimerDisplay();
+      }
+    }
+
+    function resetTimer() {
+      if (timerRunning) toggleTimerPlay();
+      if (timerMode === 'stopwatch') stopwatchMs = 0;
+      else timerMsLeft = timerTotalMs;
+      updateTimerDisplay();
+      playHapticPop(360, 'sine', 0.06);
+    }
+
+    function updateTimerDisplay() {
+      const mDisplay = document.getElementById('timerMinsDisplay');
+      const sDisplay = document.getElementById('timerSecsDisplay');
+      const msDisplay = document.getElementById('timerMsDisplay');
+      const circle = document.getElementById('timerProgressCircle');
+      const progressLabel = document.getElementById('sessionProgressPct');
+      const endLabel = document.getElementById('sessionEndTimeDisplay');
+
+      const totalMs = timerMode === 'stopwatch' ? stopwatchMs : timerMsLeft;
+      const totalSec = Math.floor(totalMs / 1000);
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      const nanoPulse = Math.floor((totalMs % 1000) / 10);
+
+      if (mDisplay) mDisplay.textContent = String(mins).padStart(2, '0');
+      if (sDisplay) sDisplay.textContent = String(secs).padStart(2, '0');
+      if (msDisplay) msDisplay.textContent = String(nanoPulse).padStart(2, '0');
+
+      if (endLabel) {
+        if (timerMode === 'stopwatch') {
+          endLabel.textContent = 'Stopwatch Running';
+        } else {
+          const now = new Date();
+          now.setMilliseconds(now.getMilliseconds() + timerMsLeft);
+          const endHours = String(now.getHours() % 12 || 12).padStart(2, '0');
+          const endMins = String(now.getMinutes()).padStart(2, '0');
+          const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+          endLabel.textContent = `Finishes at ${endHours}:${endMins} ${ampm}`;
+        }
+      }
+
+      const circumference = 720;
+      if (timerMode === 'stopwatch') {
+        if (circle) circle.style.strokeDashoffset = '0';
+        if (progressLabel) progressLabel.textContent = `Running: ${mins}m ${secs}s`;
+      } else {
+        const ratio = timerTotalMs > 0 ? (timerMsLeft / timerTotalMs) : 1;
+        const offset = circumference * (1 - ratio);
+        if (circle) circle.style.strokeDashoffset = String(offset);
+        const percentDone = Math.round((1 - ratio) * 100);
+        if (progressLabel) progressLabel.textContent = `Progress: ${percentDone}%`;
+      }
+    }
+
+    function logSessionTimeToSubject() {
+      const select = document.getElementById('selectFocusSubjectLog');
+      const subjectId = select ? select.value : null;
+      if (!subjectId) {
+        showInAppToast('कृपया पहले विषय चुनें।', '⚠️');
+        return;
+      }
+      const item = appState.items.find(x => x.id === subjectId);
+      if (!item) return;
+
+      const realToday = new Date().getDate();
+      if (!appState.checks[subjectId]) appState.checks[subjectId] = {};
+      appState.checks[subjectId][realToday] = true;
+
+      persistAppState();
+      renderAllComponents();
+      refreshMetricsAndCharts();
+      playHapticPop(700, 'sine', 0.15);
+      showInAppToast(`⏱️ समय "${item.name}" में लॉग हुआ!`, '🎯');
+    }
+
+    function toggleZenFocusMode() {
+      zenModeActive = !zenModeActive;
+      const header = document.querySelector('header');
+      const nav = document.querySelector('nav');
+      if (zenModeActive) {
+        if (header) header.classList.add('hidden');
+        if (nav) nav.classList.add('hidden');
+        switchTab('focus');
+        showInAppToast('🧘 ज़ेन मोड (Press Z or toggle to exit)', '🧘');
+      } else {
+        if (header) header.classList.remove('hidden');
+        if (nav) nav.classList.remove('hidden');
+      }
+    }
+
+    // ================= NEURO AMBIENT AUDIO =================
+    let activeAmbientSource = null;
+    let activeAmbientType = null;
+
+    function toggleAmbientSound(type) {
+      if (activeAmbientType === type) { stopAmbientSound(); return; }
+      stopAmbientSound();
+      activeAmbientType = type;
+
+      const ctx = getAudioContext();
+      const bufferSize = ctx.sampleRate * 2;
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+
+      let lastOut = 0.0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        if (type === 'brownnoise') {
+          output[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = output[i];
+          output[i] *= 3.5;
+        } else {
+          output[i] = white;
+        }
+      }
+
+      const whiteNoise = ctx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+      whiteNoise.loop = true;
+
+      const filter = ctx.createBiquadFilter();
+      ambientGainNode = ctx.createGain();
+
+      if (type === 'rain') { filter.type = 'lowpass'; filter.frequency.value = 850; }
+      else if (type === 'brownnoise') { filter.type = 'lowpass'; filter.frequency.value = 320; }
+      else if (type === 'whitenoise') { filter.type = 'bandpass'; filter.frequency.value = 1200; }
+      else if (type === 'binaural') { filter.type = 'lowpass'; filter.frequency.value = 240; }
+      else if (type === 'alpha') { filter.type = 'bandpass'; filter.frequency.value = 100; }
+
+      ambientGainNode.gain.setValueAtTime(currentAmbientVolume, ctx.currentTime);
+      whiteNoise.connect(filter);
+      filter.connect(ambientGainNode);
+      ambientGainNode.connect(ctx.destination);
+      whiteNoise.start();
+
+      activeAmbientSource = whiteNoise;
+    }
+
+    function stopAmbientSound() {
+      if (activeAmbientSource) {
+        try { activeAmbientSource.stop(); } catch (e) {}
+        activeAmbientSource = null;
+      }
+      activeAmbientType = null;
+    }
+
+    function checkDailyCompletionConfetti(day) {
+      if (!appState || !appState.items || appState.items.length === 0) return;
+      let allDone = true;
+      appState.items.forEach(it => {
+        if (!appState.checks[it.id] || !appState.checks[it.id][day]) allDone = false;
+      });
+      if (allDone && typeof confetti === 'function') confetti({ particleCount: 75, spread: 70 });
+    }
+
+    // ================= MOCK TESTS =================
+    function addNewMockEntry() {
+      const title = document.getElementById('inputMockTitle').value.trim() || 'Mock Test';
+      const score = parseFloat(document.getElementById('inputMockScore').value) || 0;
+      const total = parseFloat(document.getElementById('inputMockTotal').value) || 200;
+      const acc = parseFloat(document.getElementById('inputMockAccuracy').value) || 0;
+      const percentile = parseFloat(document.getElementById('inputMockPercentile').value) || 0;
+
+      const errSilly = parseInt(document.getElementById('inputErrSilly').value) || 0;
+      const errConcept = parseInt(document.getElementById('inputErrConcept').value) || 0;
+      const errTime = parseInt(document.getElementById('inputErrTime').value) || 0;
+      const errGuess = parseInt(document.getElementById('inputErrGuess').value) || 0;
+
+      let primaryCause = 'संतुलित';
+      const maxErr = Math.max(errSilly, errConcept, errTime, errGuess);
+      if (maxErr > 0) {
+        if (maxErr === errSilly) primaryCause = 'Silly Mistake';
+        else if (maxErr === errConcept) primaryCause = 'Concept Gap';
+        else if (maxErr === errTime) primaryCause = 'Time Pressure';
+        else if (maxErr === errGuess) primaryCause = 'Guesswork';
+      }
+
+      if (!appState.mocks) appState.mocks = [];
+      appState.mocks.unshift({
+        id: 'mock_' + Date.now(),
+        date: new Date().toISOString().split('T')[0],
+        title, score, total, accuracy: acc, percentile,
+        primaryCause,
+        wrongCount: (errSilly + errConcept + errTime + errGuess)
+      });
+
+      persistAppState();
+      renderMocksSection();
+
+      document.getElementById('inputMockTitle').value = '';
+      document.getElementById('inputMockScore').value = '';
+      document.getElementById('inputMockAccuracy').value = '';
+      document.getElementById('inputMockPercentile').value = '';
+      document.getElementById('inputErrSilly').value = '';
+      document.getElementById('inputErrConcept').value = '';
+      document.getElementById('inputErrTime').value = '';
+      document.getElementById('inputErrGuess').value = '';
+
+      playHapticPop(650, 'sine', 0.12);
+      showInAppToast('📝 नया मॉक टेस्ट लॉग दर्ज!');
+    }
+
+    function deleteMockEntry(mockId) {
+      if (!appState.mocks) return;
+      appState.mocks = appState.mocks.filter(m => m.id !== mockId);
+      persistAppState();
+      renderMocksSection();
+      playHapticPop(380, 'sine', 0.05);
+      showInAppToast('मॉक टेस्ट हटाया गया।', '🗑️');
+    }
+
+    function renderMocksSection() {
+      const tbody = document.getElementById('tableMocksBody');
+      const countBadge = document.getElementById('totalMocksCountBadge');
+      const negativeMarksEl = document.getElementById('metricNegativeMarksLost');
+      const rankDropEl = document.getElementById('metricEstimatedRankDrop');
+
+      if (!tbody) return;
+      const mocks = appState.mocks || [];
+      if (countBadge) countBadge.textContent = `${mocks.length} Tests`;
+
+      let totalWrong = 0;
+      mocks.forEach(m => { totalWrong += (m.wrongCount || 0); });
+
+      const marksLost = (totalWrong * 0.66).toFixed(1);
+      if (negativeMarksEl) negativeMarksEl.textContent = `-${marksLost} Marks`;
+      if (rankDropEl) {
+        const estShift = Math.round(totalWrong * 45);
+        rankDropEl.textContent = `~${estShift} Ranks`;
+      }
+
+      if (mocks.length === 0) {
+        tbody.innerHTML = `<tr><td class="p-3 text-center text-[var(--st-text-muted)] text-xs">कोई मॉक टेस्ट दर्ज नहीं।</td></tr>`;
+      } else {
+        tbody.innerHTML = mocks.map(m => `
+          <tr class="border-b border-[var(--st-border)]">
+            <td class="p-2 font-medium">
+              <span class="font-bold text-[var(--st-text-head)] block">${m.title}</span>
+              <span class="text-[9px] text-[var(--st-text-muted)]">${m.date}</span>
+            </td>
+            <td class="p-2 text-center font-mono font-bold text-sky-500">${m.score}/${m.total}</td>
+            <td class="p-2 text-center font-mono font-bold text-emerald-500">${m.accuracy}%</td>
+            <td class="p-2 text-center"><button onclick="deleteMockEntry('${m.id}')" class="text-rose-500 text-xs">✕</button></td>
+          </tr>
+        `).join('');
+      }
+
+      const chartCanvas = document.getElementById('chartMocksCanvas');
+      if (chartCanvas) {
+        const reversedMocks = [...mocks].reverse();
+        const labels = reversedMocks.map((_, i) => `T${i + 1}`);
+        const scores = reversedMocks.map(m => m.score);
+
+        if (chartMocks) chartMocks.destroy();
+        chartMocks = new Chart(chartCanvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: labels.length > 0 ? labels : ['No Data'],
+            datasets: [{
+              label: 'Marks',
+              data: scores.length > 0 ? scores : [0],
+              borderColor: '#0284c7',
+              backgroundColor: 'rgba(2, 132, 199, 0.1)',
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, grid: { color: isDarkMode ? '#1e293b' : '#e2e8f0' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+    }
+
+    function exportUserDataJSON() {
+      const dataStr = JSON.stringify(appState, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SmartStudyPro_${currentYear}_${currentMonth + 1}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      playHapticPop(600, 'sine', 0.08);
+      showInAppToast('📥 JSON बैकअप डाउनलोड हुआ!');
+    }
+
+    function importUserDataJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (parsed && Array.isArray(parsed.items)) {
+            appState = parsed;
+            persistAppState();
+            renderAllComponents();
+            refreshMetricsAndCharts();
+            renderMocksSection();
+            populateFocusSubjectOptions();
+            showInAppToast('📤 डेटा रिस्टोर हुआ!');
+          }
+        } catch (err) {
+          showInAppToast('अमान्य JSON फ़ाइल!', '⚠️');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function confirmResetData() {
+      if (window.confirm('क्या आप सचमुच पूरा डेटा रीसेट करना चाहते हैं?')) {
+        appState = {
+          items: [], checks: {}, dailyNotes: {}, dailyPyq: {}, dailyPyqDetail: {},
+          dailyEnergy: {}, dailySleep: {}, distractions: {}, mocks: [], microTopics: {},
+          subjectSources: {}, feynmanCards: [], hourlyDensity: {}, spacedLogs: []
+        };
+        persistAppState();
+        renderAllComponents();
+        refreshMetricsAndCharts();
+        renderMocksSection();
+        populateFocusSubjectOptions();
+        playHapticPop(300, 'sine', 0.15);
+        showInAppToast('डैशबोर्ड रीसेट हो गया।');
+      }
+    }
+
+    function openQRCodeModal() {
+      const modal = document.getElementById('modalQRCode');
+      const container = document.getElementById('qrCodeContainer');
+      const input = document.getElementById('sharePageUrlInput');
+      const currentUrl = window.location.href || 'https://www.google.com';
+      input.value = currentUrl;
+      container.innerHTML = '';
+
+      try {
+        if (typeof QRCode !== 'undefined') {
+          new QRCode(container, { text: currentUrl, width: 160, height: 160 });
+        } else {
+          container.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(currentUrl)}" alt="QR Code">`;
+        }
+      } catch (err) {
+        container.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(currentUrl)}" alt="QR Code">`;
+      }
+      modal.classList.remove('hidden');
+      playHapticPop(500, 'sine', 0.05);
+    }
+
+    function closeQRCodeModal() { document.getElementById('modalQRCode').classList.add('hidden'); }
+
+    function copySharePageUrl() {
+      const copyText = document.getElementById("sharePageUrlInput");
+      copyText.select();
+      document.execCommand("copy");
+      showInAppToast('URL कॉपी हो गया! ✓');
+    }
+
+    function renderActivityHeatmap() {
+      const container = document.getElementById('heatmapGridContainer');
+      if (!container) return;
+      const totalDays = daysInMonth(currentYear, currentMonth);
+      const totalItems = appState.items ? appState.items.length : 1;
+      let html = '';
+
+      for (let day = 1; day <= totalDays; day++) {
+        let dayTicks = 0;
+        if (appState.items) {
+          appState.items.forEach(it => {
+            if (appState.checks[it.id] && appState.checks[it.id][day]) dayTicks++;
+          });
+        }
+        const ratio = totalItems > 0 ? (dayTicks / totalItems) : 0;
+        let bgClass = isDarkMode ? 'bg-slate-800' : 'bg-slate-200';
+        if (ratio > 0.8) bgClass = 'bg-emerald-500';
+        else if (ratio > 0.5) bgClass = 'bg-sky-500';
+        else if (ratio > 0.25) bgClass = 'bg-sky-400';
+        else if (ratio > 0) bgClass = 'bg-sky-200 dark:bg-sky-900';
+
+        html += `<div class="w-4 h-4 rounded-sm ${bgClass}"></div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    // ================= REFRESH METRICS & CHARTS =================
+    function refreshMetricsAndCharts() {
+      const totalDays = daysInMonth(currentYear, currentMonth);
+      const totalItems = appState.items ? appState.items.length : 0;
+      let totalCompletedAll = 0;
+      let totalGoalAll = 0;
+      let totalHoursInvested = 0;
+      let targetHoursTotal = 0;
+      let itemScores = [];
+
+      if (appState.items) {
+        appState.items.forEach(it => {
+          const goal = it.goal || 25;
+          const hrs = it.hours || 1;
+          totalGoalAll += goal;
+          targetHoursTotal += (goal * hrs);
+
+          let done = 0;
+          const checks = appState.checks[it.id] || {};
+          for (let d = 1; d <= totalDays; d++) {
+            if (checks[d]) {
+              done++;
+              totalHoursInvested += hrs;
+            }
+          }
+          totalCompletedAll += done;
+          itemScores.push({
+            name: it.name,
+            icon: it.icon,
+            done, goal, hoursPerDay: hrs,
+            totalHoursSpent: done * hrs,
+            ratio: goal > 0 ? (done / goal) : 0
+          });
+        });
+      }
+
+      document.getElementById('metricTotalHours').textContent = `${totalHoursInvested.toFixed(1)}h`;
+      document.getElementById('metricHoursTarget').textContent = `/ ${targetHoursTotal.toFixed(0)}h goal`;
+      const overallPct = targetHoursTotal > 0 ? Math.min(100, Math.round((totalHoursInvested / targetHoursTotal) * 100)) : 0;
+      document.getElementById('barOverallPct').style.width = `${overallPct}%`;
+
+      const isCurrentMonth = new Date().getFullYear() === currentYear && new Date().getMonth() === currentMonth;
+      const todayDay = isCurrentMonth ? new Date().getDate() : 1;
+      let todayDone = 0;
+      let todayHours = 0;
+      if (appState.items) {
+        appState.items.forEach(it => {
+          if (appState.checks[it.id] && appState.checks[it.id][todayDay]) {
+            todayDone++;
+            todayHours += (it.hours || 1);
+          }
+        });
+      }
+      document.getElementById('metricTodayHours').textContent = `${todayHours.toFixed(1)}h`;
+      document.getElementById('metricTodayRatio').textContent = `${todayDone}/${totalItems} Done`;
+
+      let streak = 0;
+      for (let d = todayDay; d >= 1; d--) {
+        let dailyLogged = 0;
+        if (appState.items) {
+          appState.items.forEach(it => {
+            if (appState.checks[it.id] && appState.checks[it.id][d]) dailyLogged++;
+          });
+        }
+        if (dailyLogged > 0) streak++;
+        else break;
+      }
+      document.getElementById('metricStreakDays').textContent = `${streak} दिन`;
+
+      const rankBadge = document.getElementById('badgeRank');
+      if (rankBadge) {
+        let rankText = 'Novice';
+        if (streak >= 25 || totalHoursInvested >= 150) rankText = 'Beast';
+        else if (streak >= 15 || totalHoursInvested >= 90) rankText = 'Slayer';
+        else if (streak >= 7 || totalHoursInvested >= 40) rankText = 'Scholar';
+        rankBadge.textContent = rankText;
+      }
+
+      const pace = todayDay > 0 ? (totalHoursInvested / todayDay).toFixed(1) : '0.0';
+      document.getElementById('telemetryPace').textContent = `${pace}h/day`;
+      const remainingHours = Math.max(0, targetHoursTotal - totalHoursInvested);
+      const daysNeeded = parseFloat(pace) > 0 ? Math.ceil(remainingHours / parseFloat(pace)) : 0;
+      document.getElementById('telemetryForecast').textContent = `अनुमान: ~${daysNeeded} दिन शेष`;
+
+      document.getElementById('valDoughnutDone').textContent = `${totalHoursInvested.toFixed(0)} hrs`;
+      document.getElementById('valDoughnutLeft').textContent = `${Math.max(0, targetHoursTotal - totalHoursInvested).toFixed(0)} hrs`;
+
+      updateChartsData(totalDays, totalItems, itemScores);
+    }
+
+    function destroyCharts() {
+      if (chartTrend) chartTrend.destroy();
+      if (chartDoughnut) chartDoughnut.destroy();
+      if (chartRadar) chartRadar.destroy();
+      if (chartWeekly) chartWeekly.destroy();
+      if (chartMocks) chartMocks.destroy();
+    }
+
+    function initializeCharts() {
+      const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+      const gridColor = isDarkMode ? '#1e293b' : '#e2e8f0';
+
+      const ctxTrend = document.getElementById('chartTrendCanvas').getContext('2d');
+      chartTrend = new Chart(ctxTrend, {
+        type: 'line',
+        data: { labels: [], datasets: [{ data: [], borderColor: '#38bdf8', fill: true, tension: 0.38, borderWidth: 2 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+
+      const ctxDoughnut = document.getElementById('chartDoughnutCanvas').getContext('2d');
+      chartDoughnut = new Chart(ctxDoughnut, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#38bdf8', '#3b82f6', '#6366f1', '#10b981', '#f59e0b'] }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }
+      });
+
+      const ctxRadar = document.getElementById('chartRadarCanvas').getContext('2d');
+      chartRadar = new Chart(ctxRadar, {
+        type: 'radar',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: 'rgba(56, 189, 248, 0.25)', borderColor: '#38bdf8', borderWidth: 2 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } }, plugins: { legend: { display: false } } }
+      });
+
+      const ctxWeekly = document.getElementById('chartWeeklyCanvas').getContext('2d');
+      chartWeekly = new Chart(ctxWeekly, {
+        type: 'bar',
+        data: { labels: ['W1', 'W2', 'W3', 'W4', 'W5'], datasets: [{ data: [0, 0, 0, 0, 0], backgroundColor: '#38bdf8', borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+
+    function updateChartsData(totalDays, totalItems, itemScores) {
+      if (!chartTrend) return;
+      const trendLabels = [];
+      const trendData = [];
+      for (let d = 1; d <= totalDays; d++) {
+        trendLabels.push(`D${d}`);
+        let dayCount = 0;
+        if (appState.items) {
+          appState.items.forEach(it => {
+            if (appState.checks[it.id] && appState.checks[it.id][d]) dayCount++;
+          });
+        }
+        trendData.push(totalItems > 0 ? Math.round((dayCount / totalItems) * 100) : 0);
+      }
+      chartTrend.data.labels = trendLabels;
+      chartTrend.data.datasets[0].data = trendData;
+      chartTrend.update();
+
+      if (itemScores.length > 0) {
+        chartDoughnut.data.labels = itemScores.map(it => it.name.substring(0, 10));
+        chartDoughnut.data.datasets[0].data = itemScores.map(it => it.totalHoursSpent);
+      } else {
+        chartDoughnut.data.labels = ['Empty'];
+        chartDoughnut.data.datasets[0].data = [1];
+      }
+      chartDoughnut.update();
+
+      chartRadar.data.labels = itemScores.map(it => it.name.substring(0, 8));
+      chartRadar.data.datasets[0].data = itemScores.map(it => Math.round(it.ratio * 100));
+      chartRadar.update();
+
+      const weeks = [
+        { start: 1, end: 7 }, { start: 8, end: 14 },
+        { start: 15, end: 21 }, { start: 22, end: 28 }, { start: 29, end: totalDays }
+      ];
+      chartWeekly.data.datasets[0].data = weeks.map(w => {
+        let total = 0;
+        for (let d = w.start; d <= Math.min(w.end, totalDays); d++) {
+          if (appState.items) {
+            appState.items.forEach(it => {
+              if (appState.checks[it.id] && appState.checks[it.id][d]) total += (it.hours || 1);
+            });
+          }
+        }
+        return total;
+      });
+      chartWeekly.update();
+    }
+
+    // ================= ONBOARDING & SETUP =================
+    function openExamSetupModal() {
+      const modal = document.getElementById('modalExamSetup');
+      const select = document.getElementById('selectExamPreset');
+      document.getElementById('inputStudentName').value = studentName || '';
+      if (targetExamName) document.getElementById('inputExamName').value = targetExamName;
+      if (targetExamDate) {
+        document.getElementById('inputExamTargetDate').value = new Date(targetExamDate).toISOString().split('T')[0];
+        syncDaysFromDate(document.getElementById('inputExamTargetDate').value);
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeExamSetupModal() { document.getElementById('modalExamSetup').classList.add('hidden'); }
+
+    function handlePresetExamChange(val) {
+      const nameInput = document.getElementById('inputExamName');
+      nameInput.value = val === 'custom' ? '' : val;
+    }
+
+    function syncDaysFromDate(dateVal) {
+      if (!dateVal) return;
+      const diff = Math.max(1, Math.round((new Date(dateVal).getTime() - new Date().getTime()) / 86400000));
+      document.getElementById('inputExamTargetDays').value = diff;
+    }
+
+    function syncDateFromDays(daysVal) {
+      const days = parseInt(daysVal) || 90;
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      document.getElementById('inputExamTargetDate').value = d.toISOString().split('T')[0];
+    }
+
+    function saveExamSetupAndContinue() {
+      studentName = document.getElementById('inputStudentName').value.trim() || 'Aspirant';
+      targetExamName = document.getElementById('inputExamName').value.trim() || 'Target Exam';
+      const dateStr = document.getElementById('inputExamTargetDate').value;
+      if (!dateStr) return;
+
+      targetExamDate = new Date(dateStr + 'T23:59:59').toISOString();
+      localStorage.setItem('st_student_name', studentName);
+      localStorage.setItem('st_target_exam_name', targetExamName);
+      localStorage.setItem('st_target_exam_date', targetExamDate);
+
+      const preset = document.getElementById('selectExamPreset').value;
+      const autoLoad = document.getElementById('checkAutoLoadBundle').checked;
+      if (autoLoad && EXAM_BUNDLES[preset] && appState.items.length === 0) {
+        appState.items = EXAM_BUNDLES[preset].map((it, idx) => ({ id: 'b_' + Date.now() + '_' + idx, ...it }));
+        persistAppState();
+      }
+
+      closeExamSetupModal();
+      updateStudentNameDisplay();
+      updateExamDisplayInfo();
+      startExamCountdown();
+      renderAllComponents();
+      refreshMetricsAndCharts();
+      showInAppToast(`नमस्ते ${studentName}! ऐप तैयार है।`);
+    }
+
+    function updateExamDisplayInfo() {
+      document.getElementById('displayTargetExamName').textContent = targetExamName || 'Target Exam';
+    }
+
+    let countdownInterval = null;
+    function startExamCountdown() {
+      if (countdownInterval) clearInterval(countdownInterval);
+      function tick() {
+        if (!targetExamDate) return;
+        const diff = Math.max(0, new Date(targetExamDate).getTime() - new Date().getTime());
+        const days = Math.floor(diff / 86400000);
+        const hours = Math.floor((diff % 86400000) / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+        document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+      }
+      tick();
+      countdownInterval = setInterval(tick, 1000);
+    }
+
+    function startLiveDeviceClock() {
+      function tick() {
+        const now = new Date();
+        const hrs = String(now.getHours() % 12 || 12).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+        const dateStr = `${now.getDate()} ${MONTH_NAMES[currentLang][now.getMonth()]}`;
+        document.getElementById('liveDateString').textContent = `${hrs}:${mins} ${ampm} • ${dateStr}`;
+      }
+      tick();
+      setInterval(tick, 30000);
+    }
+
+    function setDailySleep(val) {
+      const realToday = new Date().getDate();
+      if (!appState.dailySleep) appState.dailySleep = {};
+      appState.dailySleep[realToday] = val;
+      persistAppState();
+      playHapticPop(500, 'sine', 0.05);
+    }
+
+    function updateSleepDisplay() {
+      const realToday = new Date().getDate();
+      const val = (appState.dailySleep && appState.dailySleep[realToday]) || '7';
+      const sel = document.getElementById('selectSleepHours');
+      if (sel) sel.value = val;
+    }
+
+    function adjustDetailedPyq(type, delta) {
+      const realToday = new Date().getDate();
+      if (!appState.dailyPyqDetail) appState.dailyPyqDetail = {};
+      if (!appState.dailyPyqDetail[realToday]) appState.dailyPyqDetail[realToday] = { correct: 0, wrong: 0 };
+      const cur = appState.dailyPyqDetail[realToday];
+      if (type === 'correct') cur.correct = Math.max(0, (cur.correct || 0) + delta);
+      persistAppState();
+      updateDetailedPyqDisplay();
+      playHapticPop(delta > 0 ? 640 : 420, 'sine', 0.05);
+    }
+
+    function updateDetailedPyqDisplay() {
+      const realToday = new Date().getDate();
+      const data = (appState.dailyPyqDetail && appState.dailyPyqDetail[realToday]) || { correct: 0, wrong: 0 };
+      document.getElementById('valPyqCorrect').textContent = data.correct || 0;
+      document.getElementById('displayTodayPyq').textContent = data.correct || 0;
+    }
+
+    function renderWarRoomView() {
+      const q1 = document.getElementById('quadrantQ1');
+      const q2 = document.getElementById('quadrantQ2');
+      const q3 = document.getElementById('quadrantQ3');
+      const q4 = document.getElementById('quadrantQ4');
+      const urgent = document.getElementById('warroomUrgentList');
+      const safe = document.getElementById('warroomSafeList');
+
+      if (!q1) return;
+      q1.innerHTML = ''; q2.innerHTML = ''; q3.innerHTML = ''; q4.innerHTML = '';
+      urgent.innerHTML = ''; safe.innerHTML = '';
+
+      const totalDays = daysInMonth(currentYear, currentMonth);
+      let totalWeighted = 0;
+
+      appState.items.forEach(it => {
+        const checks = appState.checks[it.id] || {};
+        const done = Object.values(checks).filter(Boolean).length;
+        const ratio = (done / (it.goal || 25));
+        totalWeighted += ratio;
+
+        const pill = `<div class="p-1 rounded st-glass flex justify-between"><span>${it.icon} ${it.name}</span><b>${Math.round(ratio*100)}%</b></div>`;
+        if (ratio < 0.4) {
+          q1.innerHTML += pill;
+          urgent.innerHTML += `<div class="p-2 rounded-xl st-subtle text-rose-500 font-bold flex justify-between"><span>${it.icon} ${it.name}</span><span>${Math.round(ratio*100)}%</span></div>`;
+        } else if (ratio >= 0.7) {
+          q2.innerHTML += pill;
+          safe.innerHTML += `<div class="p-2 rounded-xl st-subtle text-emerald-500 font-bold flex justify-between"><span>${it.icon} ${it.name}</span><span>${Math.round(ratio*100)}%</span></div>`;
+        } else if (ratio < 0.5) {
+          q3.innerHTML += pill;
+        } else {
+          q4.innerHTML += pill;
+        }
+      });
+
+      const avg = appState.items.length ? Math.round((totalWeighted / appState.items.length) * 100) : 0;
+      document.getElementById('warroomReadinessScore').textContent = `${avg}% Ready`;
+    }
+
+    function populateFocusSubjectOptions() {
+      const sel = document.getElementById('selectFocusSubjectLog');
+      if (!sel) return;
+      sel.innerHTML = '';
+      if (!appState.items || appState.items.length === 0) {
+        sel.innerHTML = '<option value="">कोई विषय उपलब्ध नहीं</option>';
+        return;
+      }
+      appState.items.forEach(it => {
+        const opt = document.createElement('option');
+        opt.value = it.id;
+        opt.textContent = `${it.icon || '📖'} ${it.name}`;
+        sel.appendChild(opt);
+      });
+    }
+
+    function copyDailyTelegramReport() {
+      const realToday = new Date().getDate();
+      const hours = document.getElementById('metricTodayHours').textContent;
+      const streak = document.getElementById('metricStreakDays').textContent;
+      let msg = `🎯 *Smart Study Pro Daily Report*\n👤 ${studentName}\n⏱️ Time: ${hours}\n🔥 Streak: ${streak}\nConsistent study unlocks success! 🚀`;
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = msg;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+      showInAppToast('📋 स्टेटस क्लिपबोर्ड पर कॉपी हुआ!');
+    }
+
+    // ================= CHAPTERS & RESOURCES =================
+    let currentManagingTopicId = null;
+    function openTopicModal(id) {
+      currentManagingTopicId = id;
+      const it = appState.items.find(x => x.id === id);
+      if (!it) return;
+
+      document.getElementById('topicModalHeading').innerHTML = `${it.icon || '📚'} ${it.name}`;
+      document.getElementById('topicModalSub').textContent = `${it.cat} • Target: ${it.goal}d`;
+      document.getElementById('inputTopicSource').value = (appState.subjectSources && appState.subjectSources[id]) || '';
+      switchTopicModalTab('chapters');
+      document.getElementById('modalTopicManager').classList.remove('hidden');
+    }
+
+    function switchTopicModalTab(tab) {
+      const vChaps = document.getElementById('viewTopicChapters');
+      const vLogs = document.getElementById('viewTopicLogs');
+      if (tab === 'chapters') {
+        vChaps.classList.remove('hidden');
+        vLogs.classList.add('hidden');
+        renderChaptersList();
+      } else {
+        vChaps.classList.add('hidden');
+        vLogs.classList.remove('hidden');
+        renderTopicLogsList();
+      }
+    }
+
+    function renderChaptersList() {
+      const container = document.getElementById('topicChaptersList');
+      if (!container || !currentManagingTopicId) return;
+      const list = (appState.microTopics && appState.microTopics[currentManagingTopicId]) || [];
+      document.getElementById('chaptersCountLabel').textContent = `${list.length} Chapters`;
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-xs text-[var(--st-text-muted)]">कोई अध्याय नहीं है।</div>`;
+        return;
+      }
+      container.innerHTML = list.map(c => `
+        <div class="flex items-center justify-between p-2 rounded-xl st-subtle text-xs">
+          <label class="flex items-center gap-2 cursor-pointer ${c.done ? 'line-through opacity-60' : ''}">
+            <input type="checkbox" class="w-4 h-4 accent-sky-500 rounded" ${c.done ? 'checked' : ''} onchange="toggleChapterDone('${c.id}', this.checked)">
+            <span>${c.name}</span>
+          </label>
+          <button onclick="deleteChapter('${c.id}')" class="text-rose-500">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function renderTopicLogsList() {
+      const container = document.getElementById('topicSpacedLogsList');
+      if (!container || !currentManagingTopicId) return;
+      const logs = (appState.spacedLogs || []).filter(l => String(l.itemId) === String(currentManagingTopicId));
+
+      if (logs.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-xs text-[var(--st-text-muted)]">इस विषय का कोई पूर्व लॉग नहीं है।</div>`;
+        return;
+      }
+      container.innerHTML = logs.map(l => `
+        <div class="p-2.5 rounded-xl st-subtle space-y-1 text-xs">
+          <div class="flex justify-between font-mono text-[10px] text-sky-500">
+            <span>📅 ${l.studiedDate}</span>
+            <span>${l.totalPages} Pages</span>
+          </div>
+          <h5 class="font-bold text-[var(--st-text-head)]">${l.topic}</h5>
+          <span class="text-[10px] text-emerald-500 font-mono">📄 ${l.pageRange}</span>
+        </div>
+      `).join('');
+    }
+
+    function closeTopicModal() {
+      document.getElementById('modalTopicManager').classList.add('hidden');
+      currentManagingTopicId = null;
+    }
+
+    function saveSubjectSource() {
+      if (!currentManagingTopicId) return;
+      if (!appState.subjectSources) appState.subjectSources = {};
+      appState.subjectSources[currentManagingTopicId] = document.getElementById('inputTopicSource').value.trim();
+      persistAppState();
+      showInAppToast('स्रोत सुरक्षित हुआ!');
+    }
+
+    function addNewChapter() {
+      if (!currentManagingTopicId) return;
+      const name = document.getElementById('inputNewChapterName').value.trim();
+      if (!name) return;
+      if (!appState.microTopics) appState.microTopics = {};
+      if (!appState.microTopics[currentManagingTopicId]) appState.microTopics[currentManagingTopicId] = [];
+
+      appState.microTopics[currentManagingTopicId].push({ id: 'chap_' + Date.now(), name, done: false });
+      persistAppState();
+      renderChaptersList();
+      renderAllComponents();
+      document.getElementById('inputNewChapterName').value = '';
+    }
+
+    function toggleChapterDone(chapId, isDone) {
+      if (!currentManagingTopicId || !appState.microTopics[currentManagingTopicId]) return;
+      const c = appState.microTopics[currentManagingTopicId].find(x => x.id === chapId);
+      if (c) c.done = isDone;
+      persistAppState();
+      renderChaptersList();
+    }
+
+    function deleteChapter(chapId) {
+      if (!currentManagingTopicId || !appState.microTopics[currentManagingTopicId]) return;
+      appState.microTopics[currentManagingTopicId] = appState.microTopics[currentManagingTopicId].filter(x => x.id !== chapId);
+      persistAppState();
+      renderChaptersList();
+      renderAllComponents();
+    }
+
+    function generatePrintReport() {
+      const tableBody = document.getElementById('printTableBody');
+      const totalDays = daysInMonth(currentYear, currentMonth);
+
+      document.getElementById('printExamDetails').textContent = `Exam: ${targetExamName || 'General Studies'}`;
+      document.getElementById('printStudentDetails').textContent = `Aspirant: ${studentName || 'Student'}`;
+      document.getElementById('printReportDate').textContent = `${MONTH_NAMES[currentLang][currentMonth]} ${currentYear}`;
+      document.getElementById('printTotalHours').textContent = document.getElementById('metricTotalHours').textContent;
+      document.getElementById('printStreak').textContent = document.getElementById('metricStreakDays').textContent;
+
+      if (appState.items) {
+        tableBody.innerHTML = appState.items.map(it => {
+          const checks = appState.checks[it.id] || {};
+          let done = 0;
+          for (let d = 1; d <= totalDays; d++) { if (checks[d]) done++; }
+          const pct = Math.min(100, Math.round((done / (it.goal || 25)) * 100));
+          return `
+            <tr>
+              <td class="p-2 border font-semibold">${it.icon || ''} ${it.name}</td>
+              <td class="p-2 border text-center">${it.cat || 'General'}</td>
+              <td class="p-2 border text-center font-mono">${it.hours || 1}h</td>
+              <td class="p-2 border text-center font-mono">${done}/${it.goal}d</td>
+              <td class="p-2 border text-center font-mono font-bold">${pct}%</td>
+            </tr>
+          `;
+        }).join('');
+      }
+      window.print();
+    }
+  </script>
+</body>
+</html>
